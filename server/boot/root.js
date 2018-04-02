@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = function(server) {
-  var User = server.models.User;
-  User.create({username: 'user', email: 'user@example.com', password: 'pass'});
+  var Employee = server.models.Employee;
+  Employee.create({username: 'user', email: 'user@example.com', password: '1'});
   
   // Install a `/` route that returns server status
   var router = server.loopback.Router();

@@ -1,0 +1,21 @@
+{
+  "name": "Employee",
+  "forceId": true,
+  "strict": true,
+  "base": "User",
+  "properties": {
+    "name": "string"
+  },
+  "acls": [
+    {
+      "permission": "DENY",
+      "principalType": "ROLE",
+      "principalId": "$everyone"
+    },
+    {
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "$authenticated"
+    }
+  ]
+}

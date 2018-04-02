@@ -1,5 +1,5 @@
 {
-  "name": "caixana",
+  "name": "erp",
   "version": "0.0.1",
   "main": "server/server.js",
   "engines": {
@@ -28,12 +28,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fokind/caixana.git"
+    "url": "git+https://github.com/fokind/erp.git"
   },
   "bugs": {
-    "url": "https://github.com/fokind/caixana/issues"
+    "url": "https://github.com/fokind/erp/issues"
   },
-  "homepage": "https://github.com/fokind/caixana#readme",
+  "homepage": "https://github.com/fokind/erp#readme",
   "author": "Dmitry Fokin <fokind1@yandex.ru> (http://github.com/fokind)",
   "license": "MIT",
   "description": "LoopBack application."

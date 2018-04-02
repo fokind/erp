@@ -11,6 +11,10 @@ sap.ui.define([
     },
 
     onAfterRendering: function(oControlEvent) {
+      this.update();
+    },
+
+    update: function() {
       let that = this;
       let oAccessToken = Cookies.getJSON('AccessToken');
 
@@ -42,6 +46,46 @@ sap.ui.define([
         itemId: o.id,
       });
     },
+
+    onDeleteActionPress: function() {
+      let that = this;
+      var oView = that.getView();
+      var oDialog = oView.byId('confirmDeleteDialog');
+      // create dialog lazily
+      if (!oDialog) {
+         // create dialog via fragment factory
+         oDialog = sap.ui.xmlfragment(oView.getId(), 'tms.basic.view.Dialog', that);
+         oView.addDependent(oDialog);
+      }
+
+      oDialog.open();
+    },
+
+		onCloseDialog: function() {
+			this.getView().byId('confirmDeleteDialog').close();
+		},
+
+    onAddActionPress: function(oControlEvent) {
+      //отправить запрос POST в API
+      let that = this;
+      let oAccessToken = Cookies.getJSON('AccessToken');
+
+      $.post({
+        url: $.sap.formatMessage(
+          '{0}Items',
+          that.getOwnerComponent()
+            .getManifestEntry('/sap.app/dataSources/api/uri')
+        ),
+      }).done(function (data) {
+        //вывести окно создания объекта
+        console.log(data);
+        //обновить таблицу
+        that.update();
+      }).fail(function (err) {
+        console.log(err);
+      });
+      //получить id, вывести сообщение
+    },    
 
     onNavBack: function() {
       let that = this;

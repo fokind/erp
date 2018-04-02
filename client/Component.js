@@ -21,33 +21,6 @@ sap.ui.define([
       UIComponent.prototype.init.apply(this, arguments);
       var oRouter = this.getRouter();
       oRouter.initialize();
-
-      //var oResourceBundle = this.getModel('i18n').getResourceBundle();
-
-      // set the device model
-      // this.setModel(models.createDeviceModel(), 'device');
-
-      // проверка авторизации
-      /*var oAccessToken = Cookies.getJSON('AccessToken');
-
-      if (oAccessToken) {
-        $.get({
-          url: $.sap.formatMessage('{0}Users/{1}', [
-            this.getMetadata()
-              .getManifestEntry('sap.app').dataSources['api'].uri,
-            oAccessToken.userId,
-          ]),
-          contentType: 'application/json',
-          headers: {'Authorization': oAccessToken.id},
-        })
-        .done(function(data) {
-          sap.m.MessageToast.show(oResourceBundle.getText('authSuccess'));
-        })
-        .fail(function(data) {
-          Cookies.remove('AccessToken');
-          oRouter.navTo('login');
-        });
-      } else oRouter.navTo('login');*/
     },
 
     getContentDensityClass: function() {

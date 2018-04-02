@@ -1,8 +1,7 @@
 {
-  "name": "Employee",
+  "name": "Department",
   "forceId": true,
   "strict": true,
-  "base": "User",
   "properties": {
     "name": "string",
     "edit": "boolean",

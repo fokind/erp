@@ -3,7 +3,9 @@
   "forceId": true,
   "strict": true,
   "properties": {
-    "name": "string"
+    "name": "string",
+    "edit": "boolean",
+    "deleted": "boolean"
   },
   "acls": [
     {

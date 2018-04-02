@@ -53,10 +53,22 @@
 					"bundleName": "tms.basic.i18n.i18n"
 				}
 			},
+			"Departments": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
+			"Department": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
 			"Items": {
 				"type": "sap.ui.model.json.JSONModel"
 			},
 			"Item": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
+			"Employees": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
+			"Employee": {
 				"type": "sap.ui.model.json.JSONModel"
 			}
 		},
@@ -86,6 +98,16 @@
 					"target": "login"
 				},
 				{
+					"pattern": "departments",
+					"name": "departments",
+					"target": "departments"
+				},
+				{
+					"pattern": "departments/{departmentId}",
+					"name": "department",
+					"target": "department"
+				},
+				{
 					"pattern": "items",
 					"name": "items",
 					"target": "items"
@@ -94,6 +116,16 @@
 					"pattern": "items/{itemId}",
 					"name": "item",
 					"target": "item"
+				},
+				{
+					"pattern": "employees",
+					"name": "employees",
+					"target": "employees"
+				},
+				{
+					"pattern": "employees/{employeeId}",
+					"name": "employee",
+					"target": "employee"
 				}
 			],
 			"targets": {
@@ -105,6 +137,14 @@
 					"viewId": "login",
 					"viewName": "Login"
 				},
+				"departments": {
+					"viewId": "departments",
+					"viewName": "Departments"
+				},
+				"department": {
+					"viewId": "department",
+					"viewName": "Department"
+				},
 				"items": {
 					"viewId": "items",
 					"viewName": "Items"
@@ -112,6 +152,14 @@
 				"item": {
 					"viewId": "item",
 					"viewName": "Item"
+				},
+				"employees": {
+					"viewId": "employees",
+					"viewName": "Employees"
+				},
+				"employee": {
+					"viewId": "employee",
+					"viewName": "Employee"
 				}
 			}
 		}

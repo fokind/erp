@@ -6,7 +6,15 @@
   "properties": {
     "name": "string",
     "edit": "boolean",
-    "deleted": "boolean"
+    "deleted": "boolean",
+    "departmentId": "string"
+  },
+  "relations": {
+    "department": {
+      "type": "belongsTo",
+      "model": "Department",
+      "foreignKey": "departmentId"
+    }
   },
   "acls": [
     {

@@ -28,6 +28,13 @@ sap.ui.define([
         ),
         '', true, 'GET', false, false,
       );
+      /*let oDepartmentsModel = that.getOwnerComponent().getModel('Departments');
+      oDepartmentsModel.loadData(
+        $.sap.formatMessage(
+          '{0}Departments', that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri')
+        ),
+        '', true, 'GET', false, false,
+      );*/
     },
 
     onNavBack: function() {

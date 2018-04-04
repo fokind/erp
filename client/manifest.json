@@ -67,9 +67,6 @@
 			},
 			"Employees": {
 				"type": "sap.ui.model.json.JSONModel"
-			},
-			"Employee": {
-				"type": "sap.ui.model.json.JSONModel"
 			}
 		},
 		"resources": {
@@ -84,14 +81,10 @@
 				"viewPath": "tms.basic.view",
 				"controlId": "app",
 				"controlAggregation": "pages",
-				"async": true
+				"async": true,
+				"homeRoute": "home"
 			},
 			"routes": [
-				{
-					"pattern": "",
-					"name": "home",
-					"target": "home"
-				},
 				{
 					"pattern": "login",
 					"name": "login",
@@ -103,7 +96,7 @@
 					"target": "departments"
 				},
 				{
-					"pattern": "departments/{departmentId}",
+					"pattern": "departments/{id}",
 					"name": "department",
 					"target": "department"
 				},
@@ -113,7 +106,7 @@
 					"target": "items"
 				},
 				{
-					"pattern": "items/{itemId}",
+					"pattern": "items/{id}",
 					"name": "item",
 					"target": "item"
 				},
@@ -123,9 +116,14 @@
 					"target": "employees"
 				},
 				{
-					"pattern": "employees/{employeeId}",
+					"pattern": "employees/{id}",
 					"name": "employee",
 					"target": "employee"
+				},
+				{
+					"pattern": "",
+					"name": "home",
+					"target": "home"
 				}
 			],
 			"targets": {

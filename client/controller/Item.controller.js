@@ -19,7 +19,7 @@ sap.ui.define([
           '{0}Items/{1}', [
             that.getOwnerComponent()
               .getManifestEntry('/sap.app/dataSources/api/uri'),
-            oEvent.getParameter('arguments').itemId,
+            oEvent.getParameter('arguments').id,
           ]
         ),
         '', true, 'GET', false, true,

@@ -13,7 +13,7 @@ sap.ui.define([
     },
 
     _onRouteMatched: function(oEvent) {
-      this.update(oEvent.getParameter('arguments').departmentId);
+      this.update(oEvent.getParameter('arguments').id);
     },
 
     update: function(departmentId) {

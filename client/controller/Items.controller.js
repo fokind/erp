@@ -43,7 +43,7 @@ sap.ui.define([
       let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
 
       oRouter.navTo('item', {
-        itemId: o.id,
+        id: o.id,
       });
     },
 

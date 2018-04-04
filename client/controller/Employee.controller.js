@@ -9,10 +9,12 @@ sap.ui.define([
       let that = this;
       let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
       oRouter.getRoute('employee').attachPatternMatched(that._onRouteMatched, that);
+      
       this.modelName = 'Employees';
       this.models = [
         'Departments',
       ];
+
       that.setModel(new sap.ui.model.json.JSONModel(), 'Instance');
       
     },

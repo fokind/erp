@@ -40,7 +40,15 @@
     "dataSource": "db",
     "public": true
   },
-  "Item": {
+  "Customer": {
+    "dataSource": "db",
+    "public": true
+  },
+  "SalesOrderRow": {
+    "dataSource": "db",
+    "public": true
+  },
+  "SalesOrder": {
     "dataSource": "db",
     "public": true
   }

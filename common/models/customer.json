@@ -1,0 +1,22 @@
+{
+  "name": "Customer",
+  "forceId": true,
+  "strict": true,
+  "properties": {
+    "name": "string",
+    "edit": "boolean",
+    "deleted": "boolean"
+  },
+  "acls": [
+    {
+      "permission": "DENY",
+      "principalType": "ROLE",
+      "principalId": "$everyone"
+    },
+    {
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "$authenticated"
+    }
+  ]
+}

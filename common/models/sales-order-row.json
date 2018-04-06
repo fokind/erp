@@ -1,0 +1,34 @@
+{
+  "name": "SalesOrderRow",
+  "forceId": true,
+  "strict": true,
+  "properties": {
+    "sku": "string",
+    "name": "string",
+    "price": "number",
+    "quantity": "number",
+    "total": "number",
+    "edit": "boolean",
+    "deleted": "boolean",
+    "parentId": "string"
+  },
+  "relations": {
+    "parent": {
+      "type": "belongsTo",
+      "model": "SalesOrder",
+      "foreignKey": "parentId"
+    }
+  },
+  "acls": [
+    {
+      "permission": "DENY",
+      "principalType": "ROLE",
+      "principalId": "$everyone"
+    },
+    {
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "$authenticated"
+    }
+  ]
+}

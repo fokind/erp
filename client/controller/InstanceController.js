@@ -49,7 +49,11 @@ sap.ui.define([
     },
 
     _onRouteMatched: function(oEvent) {
-      this.loadAllData(oEvent.getParameter('arguments').id);
+      let that = this;
+      let sInstanceId = oEvent.getParameter('arguments').id;
+      
+      that.sInstanceId = sInstanceId;
+      that.loadAllData(sInstanceId);
     },
 
     navBack: function(sPrev) {
@@ -106,8 +110,33 @@ sap.ui.define([
     
     loadAllData: function(sId) {
       let that = this;
-      that.modelLoadData('Instance', that.modelName, sId);
+      //that.modelLoadData('Instance', that.modelName, sId);
+      that.fnInstanceModelLoadData();//сейчас работает только с заказами!!!!
+
+      that.aRelations.forEach(function(relation) { that.fnRelationModelLoadData(relation.name); });
+
       that.models.forEach(function(model) { that.modelLoadData(model); });
+    },
+
+    fnInstanceModelLoadData: function() {
+      let that = this;
+      that.getModel('Instance').loadData(
+        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
+        that.sInstanceModelName + '/' +
+        that.sInstanceId,
+        '', true, 'GET', false, false,
+      );
+    },
+
+    fnRelationModelLoadData: function(sRelationName) {
+      let that = this;
+      that.getModel('Instance').loadData(
+        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
+        that.sInstanceModelName + '/' +
+        that.sInstanceId + '/' +
+        sRelationName,
+        '', true, 'GET', false, false,
+      );
     },
 
     modelLoadData: function(sModel, sModelPlural, sId) {

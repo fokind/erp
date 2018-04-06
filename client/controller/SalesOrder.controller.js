@@ -7,9 +7,17 @@ sap.ui.define([
   return Controller.extend('tms.basic.controller.SalesOrder', {
     onInit: function() {
       let that = this;
-      that.modelName = 'SalesOrders';
+      that.sInstanceModelName = 'SalesOrders';
+      that.aRelations = [
+        {name: 'Rows'}
+      ];
+
+      //строка редактируется в диалоге
+      //при закрытии диалога с сохранением обязательно адейтится соответствующая строчка
+      //при роутинге назад должна апдейтиться соответствующая строчка, возможно еще в момент сохранения
+
       that.models = [
-        'Employees',
+        'Employees',//TODO по аналогии с описанием основной модели
       ];
 
       let oRouter = sap.ui.core.UIComponent.getRouterFor(that);

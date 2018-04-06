@@ -59,10 +59,10 @@
 			"Department": {
 				"type": "sap.ui.model.json.JSONModel"
 			},
-			"Items": {
+			"Customers": {
 				"type": "sap.ui.model.json.JSONModel"
 			},
-			"Item": {
+			"SalesOrders": {
 				"type": "sap.ui.model.json.JSONModel"
 			},
 			"Employees": {
@@ -101,16 +101,6 @@
 					"target": "department"
 				},
 				{
-					"pattern": "items",
-					"name": "items",
-					"target": "items"
-				},
-				{
-					"pattern": "items/{id}",
-					"name": "item",
-					"target": "item"
-				},
-				{
 					"pattern": "employees",
 					"name": "employees",
 					"target": "employees"
@@ -119,6 +109,26 @@
 					"pattern": "employees/{id}",
 					"name": "employee",
 					"target": "employee"
+				},
+				{
+					"pattern": "customers/{id}",
+					"name": "customer",
+					"target": "customer"
+				},
+				{
+					"pattern": "customers",
+					"name": "customers",
+					"target": "customers"
+				},
+				{
+					"pattern": "sales-orders/{id}",
+					"name": "sales-order",
+					"target": "sales-order"
+				},
+				{
+					"pattern": "sales-orders",
+					"name": "sales-orders",
+					"target": "sales-orders"
 				},
 				{
 					"pattern": "",
@@ -143,14 +153,6 @@
 					"viewId": "department",
 					"viewName": "Department"
 				},
-				"items": {
-					"viewId": "items",
-					"viewName": "Items"
-				},
-				"item": {
-					"viewId": "item",
-					"viewName": "Item"
-				},
 				"employees": {
 					"viewId": "employees",
 					"viewName": "Employees"
@@ -158,6 +160,22 @@
 				"employee": {
 					"viewId": "employee",
 					"viewName": "Employee"
+				},
+				"customers": {
+					"viewId": "customers",
+					"viewName": "Customers"
+				},
+				"customer": {
+					"viewId": "customer",
+					"viewName": "Customer"
+				},
+				"sales-orders": {
+					"viewId": "sales-orders",
+					"viewName": "SalesOrders"
+				},
+				"sales-order": {
+					"viewId": "sales-order",
+					"viewName": "SalesOrder"
 				}
 			}
 		}

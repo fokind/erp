@@ -3,6 +3,7 @@
   "forceId": true,
   "strict": true,
   "properties": {
+    "name": "string",
     "creationDate": "date",
     "total": "number",
     "edit": "boolean",

@@ -5,7 +5,15 @@
   "properties": {
     "name": "string",
     "edit": "boolean",
-    "deleted": "boolean"
+    "deleted": "boolean",
+    "managerId": "string"
+  },
+  "relations": {
+    "manager": {
+      "type": "belongsTo",
+      "model": "Employee",
+      "foreignKey": "managerId"
+    }
   },
   "acls": [
     {

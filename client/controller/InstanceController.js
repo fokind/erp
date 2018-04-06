@@ -4,7 +4,7 @@
 sap.ui.define([
 	'sap/ui/core/mvc/Controller',
 ], function(Controller) {
-	return Controller.extend('tms.basic.controller.BaseController', {
+	return Controller.extend('tms.basic.controller.InstanceController', {
 		/**
 		 * Convenience method for accessing the router.
 		 * @public

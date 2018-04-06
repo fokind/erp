@@ -4,22 +4,22 @@
 sap.ui.define([
   'tms/basic/controller/InstanceController',
 ], function(Controller) {
-  return Controller.extend('tms.basic.controller.Employee', {
+  return Controller.extend('tms.basic.controller.SalesOrder', {
     onInit: function() {
       let that = this;
-      that.modelName = 'Employees';
+      that.modelName = 'SalesOrders';
       that.models = [
-        'Departments',
+        'Employees',
       ];
 
       let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-      oRouter.getRoute('employee').attachPatternMatched(that._onRouteMatched, that);
+      oRouter.getRoute('sales-order').attachPatternMatched(that._onRouteMatched, that);
 
       that.setModel(new sap.ui.model.json.JSONModel(), 'Instance');
       
     },
 
-    onNavBack: function() { this.navBack('employees') },
+    onNavBack: function() { this.navBack('sales-orders') },
 
   });
 });

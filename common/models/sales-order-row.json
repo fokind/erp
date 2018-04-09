@@ -5,10 +5,9 @@
   "properties": {
     "sku": "string",
     "name": "string",
-    "price": "number",
+    "unitPrice": "number",
     "quantity": "number",
     "total": "number",
-    "edit": "boolean",
     "deleted": "boolean",
     "parentId": "string"
   },

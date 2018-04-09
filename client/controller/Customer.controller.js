@@ -7,9 +7,9 @@ sap.ui.define([
   return Controller.extend('tms.basic.controller.Customer', {
     onInit: function() {
       let that = this;
-      that.modelName = 'Customers';
-      that.models = [
-        'Employees',
+      that.sInstanceModelName = 'Customers';
+      that.aModels = [
+        {name: 'Employees'},
       ];
 
       let oRouter = sap.ui.core.UIComponent.getRouterFor(that);

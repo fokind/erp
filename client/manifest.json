@@ -139,43 +139,53 @@
 			"targets": {
 				"home": {
 					"viewId": "home",
-					"viewName": "Home"
+					"viewName": "Home",
+					"viewLevel" : 1
 				},
 				"login": {
 					"viewId": "login",
-					"viewName": "Login"
+					"viewName": "Login",
+					"viewLevel" : 2
 				},
 				"departments": {
 					"viewId": "departments",
-					"viewName": "Departments"
+					"viewName": "Departments",
+					"viewLevel" : 2
 				},
 				"department": {
 					"viewId": "department",
-					"viewName": "Department"
+					"viewName": "Department",
+					"viewLevel" : 3
 				},
 				"employees": {
 					"viewId": "employees",
-					"viewName": "Employees"
+					"viewName": "Employees",
+					"viewLevel" : 2
 				},
 				"employee": {
 					"viewId": "employee",
-					"viewName": "Employee"
+					"viewName": "Employee",
+					"viewLevel" : 3
 				},
 				"customers": {
 					"viewId": "customers",
-					"viewName": "Customers"
+					"viewName": "Customers",
+					"viewLevel" : 2
 				},
 				"customer": {
 					"viewId": "customer",
-					"viewName": "Customer"
+					"viewName": "Customer",
+					"viewLevel" : 3
 				},
 				"sales-orders": {
 					"viewId": "sales-orders",
-					"viewName": "SalesOrders"
+					"viewName": "SalesOrders",
+					"viewLevel" : 2
 				},
 				"sales-order": {
 					"viewId": "sales-order",
-					"viewName": "SalesOrder"
+					"viewName": "SalesOrder",
+					"viewLevel" : 3
 				}
 			}
 		}

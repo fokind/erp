@@ -51,9 +51,64 @@ sap.ui.define([
     _onRouteMatched: function(oEvent) {
       let that = this;
       let sInstanceId = oEvent.getParameter('arguments').id;
-      
+      let sInstanceModelName = that.sInstanceModelName;
+      let oView = that.getView();
+
       that.sInstanceId = sInstanceId;
-      that.loadAllData(sInstanceId);
+      that.fnLoadData(sInstanceId);
+    },
+
+    _onBindingChange: function(oEvent) {
+			// No data for the binding
+			if (!this.getView().getBindingContext()) {
+				this.getRouter().getTargets().display('notFound');
+			}
+		},
+
+    fnLoadData: function(sId) {
+      let that = this;
+
+      that.fnInstanceModelLoadData();
+      if (that.aRelations) that.aRelations.forEach(function(relation) { that.fnRelationModelLoadData(relation.name); });
+      if (that.aModels) that.aModels.forEach(function(model) { that.fnModelLoadData(model.name); });
+    },
+
+    fnInstanceModelLoadData: function() {
+      let that = this;
+      let sInstanceModelName = that.sInstanceModelName;
+      let sInstanceId = that.sInstanceId;
+      that.getModel('Instance').loadData(
+        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
+        that.sInstanceModelName + '/' +
+        sInstanceId,
+        '', true, 'GET', false, false,
+      );
+    },
+
+    fnRelationModelLoadData: function(sRelationName) {
+      let that = this;
+      let oModel = that.getModel(sRelationName);
+      if (!oModel) oModel = that.setModel(new sap.ui.model.json.JSONModel(), sRelationName).getModel(sRelationName);
+
+      oModel.loadData(
+        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
+        that.sInstanceModelName + '/' +
+        that.sInstanceId + '/' +
+        sRelationName,
+        '', true, 'GET', false, false,
+      );
+    },
+
+    fnModelLoadData: function(sModelName) {
+      let that = this;
+      let oModel = that.getModel(sModelName);
+      if (!oModel) oModel = that.setModel(new sap.ui.model.json.JSONModel(), sModelName).getModel(sModelName);
+
+      oModel.loadData(
+        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
+        sModelName,
+        '', true, 'GET', false, false,
+      );
     },
 
     navBack: function(sPrev) {
@@ -71,28 +126,25 @@ sap.ui.define([
 
     onSaveActionPress: function(oControlEvent) {
       let that = this;
-      //let oModel = that.getOwnerComponent().getModel('Employee');
       let oModel = that.getModel('Instance');
       oModel.setProperty('/edit', false);
 
-      // сохранить изменения
       $.ajax({
-        url: that.getApiUri() + this.modelName + '/' + oModel.getProperty('/id'),
+        url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
         method: 'PATCH',
         data: oModel.getJSON(),
         contentType: 'application/json',
       });
     },
 
-    patchEdit: function(bEdit) {
-      let sModel = 'Instance';
-      let sModelPlural = this.modelName;
+    fnPatchEdit: function(bEdit) {
       let that = this;
+      let sModel = 'Instance';
       let oModel = that.getModel(sModel);
       
       $.ajax(
         {
-          url: that.getApiUri() + sModelPlural + '/' + oModel.getProperty('/id'),
+          url: that.getApiUri() + that.sInstanceModelName + '/' + oModel.getProperty('/id'),
           method: 'PATCH',
           data: '{"edit":' + bEdit + '}',
           contentType: 'application/json',
@@ -104,53 +156,13 @@ sap.ui.define([
     
     onCancelActionPress: function(oControlEvent) {
       let that = this;
-      that.patchEdit(false);
-      that.loadAllData(that.getModel('Instance').getProperty('/id'));
-    },
-    
-    loadAllData: function(sId) {
-      let that = this;
-      //that.modelLoadData('Instance', that.modelName, sId);
-      that.fnInstanceModelLoadData();//сейчас работает только с заказами!!!!
-
-      that.aRelations.forEach(function(relation) { that.fnRelationModelLoadData(relation.name); });
-
-      that.models.forEach(function(model) { that.modelLoadData(model); });
-    },
-
-    fnInstanceModelLoadData: function() {
-      let that = this;
-      that.getModel('Instance').loadData(
-        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
-        that.sInstanceModelName + '/' +
-        that.sInstanceId,
-        '', true, 'GET', false, false,
-      );
-    },
-
-    fnRelationModelLoadData: function(sRelationName) {
-      let that = this;
-      that.getModel('Instance').loadData(
-        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
-        that.sInstanceModelName + '/' +
-        that.sInstanceId + '/' +
-        sRelationName,
-        '', true, 'GET', false, false,
-      );
-    },
-
-    modelLoadData: function(sModel, sModelPlural, sId) {
-      let that = this;
-      that.getModel(sModel).loadData(
-        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
-          (sModelPlural !== undefined ? sModelPlural : sModel) +
-          (sId !== undefined ? ('/' + sId) : ''),
-        '', true, 'GET', false, false,
-      );
+      that.fnPatchEdit(false);
+      that.fnInstanceModelLoadData();
+      //that.loadAllData(that.getModel('Instance').getProperty('/id'));
     },
 
     onEditActionPress: function(oControlEvent) {
-      this.patchEdit(true);
+      this.fnPatchEdit(true);
     },
 
 	});

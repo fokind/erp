@@ -3,19 +3,23 @@
   "forceId": true,
   "strict": true,
   "properties": {
-    "sku": "string",
-    "name": "string",
     "unitPrice": "number",
     "quantity": "number",
     "total": "number",
     "deleted": "boolean",
-    "parentId": "string"
+    "parentId": "string",
+    "productId": "string"
   },
   "relations": {
     "parent": {
       "type": "belongsTo",
       "model": "SalesOrder",
       "foreignKey": "parentId"
+    },
+    "product": {
+      "type": "belongsTo",
+      "model": "Product",
+      "foreignKey": "productId"
     }
   },
   "acls": [

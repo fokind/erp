@@ -1,0 +1,23 @@
+{
+  "name": "Product",
+  "forceId": true,
+  "strict": true,
+  "properties": {
+    "sku": "string",
+    "name": "string",
+    "edit": "boolean",
+    "deleted": "boolean"
+  },
+  "acls": [
+    {
+      "permission": "DENY",
+      "principalType": "ROLE",
+      "principalId": "$everyone"
+    },
+    {
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "$authenticated"
+    }
+  ]
+}

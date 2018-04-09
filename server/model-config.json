@@ -32,6 +32,10 @@
     "dataSource": "db",
     "public": false
   },
+  "Customer": {
+    "dataSource": "db",
+    "public": true
+  },
   "Department": {
     "dataSource": "db",
     "public": true
@@ -40,15 +44,15 @@
     "dataSource": "db",
     "public": true
   },
-  "Customer": {
-    "dataSource": "db",
-    "public": true
-  },
-  "SalesOrderRow": {
+  "Product": {
     "dataSource": "db",
     "public": true
   },
   "SalesOrder": {
+    "dataSource": "db",
+    "public": true
+  },
+  "SalesOrderRow": {
     "dataSource": "db",
     "public": true
   }

@@ -79,8 +79,9 @@ sap.ui.define([
       let sInstanceId = that.sInstanceId;
       that.getModel('Instance').loadData(
         that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
-        that.sInstanceModelName + '/' +
-        sInstanceId,
+        that.sInstanceModelName +
+        '/' + sInstanceId +
+        (that.oInstanceFilter ? '?filter=' + JSON.stringify(that.oInstanceFilter) : ''),
         '', true, 'GET', false, false,
       );
     },

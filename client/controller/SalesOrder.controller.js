@@ -9,6 +9,14 @@ sap.ui.define([
     onInit: function() {
       let that = this;
       that.sInstanceModelName = 'SalesOrders';
+      
+      that.oInstanceFilter = {include: {
+        relation: 'Rows',
+        scope: {include: {relation: 'product'}},
+      }};
+
+      
+
       that.aRelations = [
         {name: 'Rows'},
       ];

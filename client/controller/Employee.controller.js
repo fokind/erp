@@ -8,9 +8,7 @@ sap.ui.define([
     onInit: function() {
       let that = this;
       that.sInstanceModelName = 'Employees';
-      that.aModels = [
-        {name: 'Departments'},
-      ];
+      that.aModels = [];
 
       let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
       oRouter.getRoute('employee').attachPatternMatched(that._onRouteMatched, that);

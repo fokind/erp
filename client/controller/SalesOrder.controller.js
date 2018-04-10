@@ -12,29 +12,16 @@ sap.ui.define([
       
       that.oInstanceFilter = {include: {
         relation: 'Rows',
-        scope: {
-          //include: {relation: 'product'},
-          where: {deleted: false},
-        },//не забыть удалить relation при сохранении
+        scope: {where: {deleted: false}},//не забыть удалить relation при сохранении
       }};
 
       that.aRelationNames = ['Rows'];
-//      that.aRowsRelations = ['product'];
-
-      
-
-      /*that.aRelations = [
-        {name: 'Rows'},
-      ];*/
-
       //строка редактируется в диалоге
       //при закрытии диалога с сохранением обязательно адейтится соответствующая строчка
       //при роутинге назад должна апдейтиться соответствующая строчка, возможно еще в момент сохранения
 
       that.aModels = [
         {name: 'Employees'},
-        {name: 'Customers'},
-        {name: 'SalesOrders'},
       ];
 
       let oRouter = sap.ui.core.UIComponent.getRouterFor(that);

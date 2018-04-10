@@ -138,21 +138,21 @@ sap.ui.define([
       let that = this;
       let oModel = that.getModel('Instance');
       
-      oModel.setProperty('/draftId', null);
       oModel.setProperty('/deleted', false);
+      oModel.setProperty('/draft', false);
 
       let oData = oModel.getData();
       var oInstanceData = _.cloneDeep(oData);
 
-      delete oInstanceData['draft'];
-
-      that.aRelationNames.forEach(function(relationName) {
-        delete oInstanceData[relationName];
-      });
+      if (that.aRelationNames) {
+        that.aRelationNames.forEach(function(relationName) {
+          delete oInstanceData[relationName];
+        });
+      }
       
       $.ajax({
         url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
-        method: 'PUT',
+        method: 'PATCH',
         data: JSON.stringify(oInstanceData),
         contentType: 'application/json',
       });
@@ -209,10 +209,11 @@ sap.ui.define([
     onCancelActionPress: function(oControlEvent) {
       let that = this;
       let oModel = that.getModel('Instance');
+
       $.ajax({
         url: that.getApiUri() + that.sInstanceModelName + '/' + oModel.getProperty('/id'),
         method: 'PATCH',
-        data: JSON.stringify({draftId: null}),
+        data: JSON.stringify({draft: false}),
         contentType: 'application/json',
       }).done(function(data) {
         that.fnInstanceModelLoadData();
@@ -223,25 +224,25 @@ sap.ui.define([
     onEditActionPress: function(oControlEvent) {
       let that = this;
       let oModel = that.getModel('Instance');
-      let oData = oModel.getData();
-      let oDraft = {
-        instance: JSON.stringify(oData),
-        modelName: that.sInstanceModelName,
-        instanceId: that.sInstanceId,
-      };
+
+      //проверить наличие черновика
+
       $.ajax({
-        url: that.getApiUri() + 'drafts',
+        url: that.getApiUri() + 'Drafts/',
         method: 'POST',
-        data: JSON.stringify(oDraft),
+        data: JSON.stringify({instance: oModel.getJSON()}),
         contentType: 'application/json',
       }).done(function(data) {
-        oModel.setProperty('draftId', data.id);
         $.ajax({
           url: that.getApiUri() + that.sInstanceModelName + '/' + oModel.getProperty('/id'),
           method: 'PATCH',
-          data: JSON.stringify({draftId: data.id}),
+          data: JSON.stringify({
+            draftId: data.id,
+            draft: true,
+          }),
           contentType: 'application/json',
         });
+        that.fnInstanceModelLoadData();
       });
     },
 

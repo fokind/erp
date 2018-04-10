@@ -6,15 +6,8 @@
   "properties": {
     "name": "string",
     "deleted": "boolean",
-    "departmentId": "string",
-    "draftId": "string"
-  },
-  "relations": {
-    "draft": {
-      "type": "belongsTo",
-      "model": "Draft",
-      "foreignKey": "draftId"
-    }
+    "draftId": "string",
+    "draft": "boolean"
   },
   "acls": [
     {

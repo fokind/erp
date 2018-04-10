@@ -32,14 +32,6 @@
     "dataSource": "db",
     "public": false
   },
-  "Customer": {
-    "dataSource": "db",
-    "public": true
-  },
-  "Department": {
-    "dataSource": "db",
-    "public": true
-  },
   "Draft": {
     "dataSource": "db",
     "public": true

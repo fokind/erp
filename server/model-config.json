@@ -40,11 +40,11 @@
     "dataSource": "db",
     "public": true
   },
-  "Employee": {
+  "Draft": {
     "dataSource": "db",
     "public": true
   },
-  "Product": {
+  "Employee": {
     "dataSource": "db",
     "public": true
   },

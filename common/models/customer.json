@@ -4,15 +4,15 @@
   "strict": true,
   "properties": {
     "name": "string",
-    "edit": "boolean",
     "deleted": "boolean",
-    "managerId": "string"
+    "ownerId": "string",
+    "draftId": "string"
   },
   "relations": {
-    "manager": {
+    "draft": {
       "type": "belongsTo",
-      "model": "Employee",
-      "foreignKey": "managerId"
+      "model": "Draft",
+      "foreignKey": "draftId"
     }
   },
   "acls": [

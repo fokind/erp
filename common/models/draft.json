@@ -1,12 +1,17 @@
 {
-  "name": "Product",
+  "name": "Draft",
   "forceId": true,
   "strict": true,
   "properties": {
-    "sku": "string",
-    "name": "string",
-    "edit": "boolean",
-    "deleted": "boolean"
+    "instance": "string",
+    "creationDateTime": "date",
+    "modifyDateTime": "date",
+    "expirationDateTime": "date",
+    "deleted": "boolean",
+    "modelName": "string",
+    "instanceId": "string",
+    "ownerId": "string",
+    "ownerName": "string"
   },
   "acls": [
     {

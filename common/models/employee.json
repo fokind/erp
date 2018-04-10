@@ -5,15 +5,15 @@
   "base": "User",
   "properties": {
     "name": "string",
-    "edit": "boolean",
     "deleted": "boolean",
-    "departmentId": "string"
+    "departmentId": "string",
+    "draftId": "string"
   },
   "relations": {
-    "department": {
+    "draft": {
       "type": "belongsTo",
-      "model": "Department",
-      "foreignKey": "departmentId"
+      "model": "Draft",
+      "foreignKey": "draftId"
     }
   },
   "acls": [

@@ -3,24 +3,12 @@
   "forceId": true,
   "strict": true,
   "properties": {
+    "productName": "string",
     "unitPrice": "number",
     "quantity": "number",
-    "total": "number",
     "deleted": "boolean",
     "parentId": "string",
     "productId": "string"
-  },
-  "relations": {
-    "parent": {
-      "type": "belongsTo",
-      "model": "SalesOrder",
-      "foreignKey": "parentId"
-    },
-    "product": {
-      "type": "belongsTo",
-      "model": "Product",
-      "foreignKey": "productId"
-    }
   },
   "acls": [
     {

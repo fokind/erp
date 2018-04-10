@@ -4,23 +4,17 @@
   "strict": true,
   "properties": {
     "name": "string",
-    "creationDate": "date",
-    "total": "number",
-    "edit": "boolean",
     "deleted": "boolean",
-    "managerId": "string",
-    "customerId": "string"
+    "ownerId": "string",
+    "ownerName": "string",
+    "customerName": "string",
+    "draftId": "string"
   },
   "relations": {
-    "customer": {
+    "draft": {
       "type": "belongsTo",
-      "model": "Customer",
-      "foreignKey": "customerId"
-    },
-    "manager": {
-      "type": "belongsTo",
-      "model": "Employee",
-      "foreignKey": "managerId"
+      "model": "Draft",
+      "foreignKey": "draftId"
     },
     "Rows": {
       "type": "hasMany",

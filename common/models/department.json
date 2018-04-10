@@ -4,8 +4,15 @@
   "strict": true,
   "properties": {
     "name": "string",
-    "edit": "boolean",
-    "deleted": "boolean"
+    "deleted": "boolean",
+    "draftId": "string"
+  },
+  "relations": {
+    "draft": {
+      "type": "belongsTo",
+      "model": "Draft",
+      "foreignKey": "draftId"
+    }
   },
   "acls": [
     {

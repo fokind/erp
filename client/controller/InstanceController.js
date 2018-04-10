@@ -126,45 +126,153 @@ sap.ui.define([
     },
 
     onSaveActionPress: function(oControlEvent) {
+      this.fnSave();
+    },
+
+    fnSave: function() {
+      /*
+      из черновика скопировать в основную модель
+      ссылку на черновик удалить
+      модель сохранить
+      */
       let that = this;
       let oModel = that.getModel('Instance');
-      oModel.setProperty('/edit', false);
+      
+      oModel.setProperty('/draftId', null);
+      oModel.setProperty('/deleted', false);
+
+      let oData = oModel.getData();
+      var oInstanceData = _.cloneDeep(oData);
+
+      delete oInstanceData['draft'];
+
+      that.aRelationNames.forEach(function(relationName) {
+        delete oInstanceData[relationName];
+      });
+      
+      $.ajax({
+        url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
+        method: 'PUT',
+        data: JSON.stringify(oInstanceData),
+        contentType: 'application/json',
+      });
+    },
+
+    fnSave2: function() {
+      /*
+      из черновика скопировать в основную модель
+      ссылку на черновик удалить
+      модель сохранить
+      */
+      let that = this;
+      let oModel = that.getModel('Instance');
+      
+      oModel.setProperty('/draftId', null);
+      oModel.setProperty('/deleted', false);
+
+      let oData = oModel.getData();
+      var oInstanceData = _.cloneDeep(oData);
+      var aRows = oData.Rows;
+      var sRelationName = 'Rows';//TODO обобщить
+
+      aRows.forEach(function(row) {
+        $.ajax({
+          url: that.getApiUri() +
+            that.sInstanceModelName + '/' + that.sInstanceId + '/' +
+            sRelationName + '/' + oModel.getProperty(sPath + '/id'),
+          method: 'PUT',
+          data: JSON.stringify(row),
+          contentType: 'application/json',
+        });
+      });
+
+      that.aRowsRelationNames.forEach(function(relationName) {
+        delete oInstanceData[relationName];
+      });
+      
+      //deepClone
+      //все связи сохранить отдельно, т.к. некоторые могут быть новыми, а некоторые уже существовать
+      //удалить все связи
+      //только после этого сохранить сам объект
+
+
 
       $.ajax({
         url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
         method: 'PATCH',
         data: oModel.getJSON(),
         contentType: 'application/json',
-      });
+      });//после этого можно удалить черновик
     },
 
-    fnPatchEdit: function(bEdit) {
-      let that = this;
-      let sModel = 'Instance';
-      let oModel = that.getModel(sModel);
-      
-      $.ajax(
-        {
-          url: that.getApiUri() + that.sInstanceModelName + '/' + oModel.getProperty('/id'),
-          method: 'PATCH',
-          data: '{"edit":' + bEdit + '}',
-          contentType: 'application/json',
-        })
-      .done(function(data, status, xhr) {
-        oModel.setProperty('/edit', bEdit);
-      });
-    },
-    
+    //работает
     onCancelActionPress: function(oControlEvent) {
       let that = this;
-      that.fnPatchEdit(false);
-      that.fnInstanceModelLoadData();
-      //that.loadAllData(that.getModel('Instance').getProperty('/id'));
+      let oModel = that.getModel('Instance');
+      $.ajax({
+        url: that.getApiUri() + that.sInstanceModelName + '/' + oModel.getProperty('/id'),
+        method: 'PATCH',
+        data: JSON.stringify({draftId: null}),
+        contentType: 'application/json',
+      }).done(function(data) {
+        that.fnInstanceModelLoadData();
+      });
     },
 
+    //работает
     onEditActionPress: function(oControlEvent) {
-      this.fnPatchEdit(true);
+      let that = this;
+      let oModel = that.getModel('Instance');
+      let oData = oModel.getData();
+      let oDraft = {
+        instance: JSON.stringify(oData),
+        modelName: that.sInstanceModelName,
+        instanceId: that.sInstanceId,
+      };
+      $.ajax({
+        url: that.getApiUri() + 'drafts',
+        method: 'POST',
+        data: JSON.stringify(oDraft),
+        contentType: 'application/json',
+      }).done(function(data) {
+        oModel.setProperty('draftId', data.id);
+        $.ajax({
+          url: that.getApiUri() + that.sInstanceModelName + '/' + oModel.getProperty('/id'),
+          method: 'PATCH',
+          data: JSON.stringify({draftId: data.id}),
+          contentType: 'application/json',
+        });
+      });
     },
 
+    //должно выполняться в фоновом режиме постоянно после каждого изменения
+    fnSaveDraft: function() {
+      let that = this;
+      let oModel = that.getModel('Instance');
+      let oData = oModel.getData();
+      let oDraft = {
+        instance: JSON.stringify(oData),
+        modelName: that.sInstanceModelName,
+        instanceId: that.sInstanceId,
+      };
+      $.ajax({
+        url: that.getApiUri() + 'drafts/' + oData.draftId,
+        method: 'POST',
+        data: JSON.stringify(oDraft),
+        contentType: 'application/json',
+      });
+    },
+
+    //работает
+    fnLoadDraft: function() {
+      let that = this;
+      $.ajax({
+        url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId + '/draft',
+        method: 'GET',
+        contentType: 'application/json',
+      }).done(function(data) {
+        that.getModel('Instance').setJSON(data.instance);
+      });
+    },
 	});
 });

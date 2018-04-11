@@ -65,7 +65,6 @@ sap.ui.define([
     onRowAccept: function(oControlEvent) {
       this.getModel('Instance').refresh();
       oControlEvent.getSource().getParent().close();
-      //that.getView().byId('salesOrderRowDialog').close();
     },
 
 		onRowSave: function(oControlEvent) {

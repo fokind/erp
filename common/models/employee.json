@@ -3,22 +3,10 @@
   "forceId": true,
   "strict": true,
   "base": "User",
-  "properties": {
-    "name": "string",
-    "deleted": "boolean",
-    "draftId": "string",
-    "draft": "boolean"
+  "mixins": {
+    "Common": {}
   },
-  "acls": [
-    {
-      "permission": "DENY",
-      "principalType": "ROLE",
-      "principalId": "$everyone"
-    },
-    {
-      "permission": "ALLOW",
-      "principalType": "ROLE",
-      "principalId": "$authenticated"
-    }
-  ]
+  "properties": {
+    "name": "string"
+  }
 }

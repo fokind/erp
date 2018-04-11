@@ -138,82 +138,42 @@ sap.ui.define([
       let that = this;
       let oModel = that.getModel('Instance');
       
-      oModel.setProperty('/deleted', false);
-      oModel.setProperty('/draft', false);
+      oModel.setProperty('/edit', false);
+      oModel.setProperty('/draft', '');
 
       let oData = oModel.getData();
+      //console.log(oModel);
       var oInstanceData = _.cloneDeep(oData);
+      //console.log(oInstanceData);
+
+      //предварительно сохранить все связи по отдельности, если они являются частью сложной сущности
 
       if (that.aRelationNames) {
         that.aRelationNames.forEach(function(relationName) {
           delete oInstanceData[relationName];
         });
       }
+      //console.log(oInstanceData);
       
       $.ajax({
         url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
         method: 'PATCH',
         data: JSON.stringify(oInstanceData),
         contentType: 'application/json',
-      });
-    },
-
-    fnSave2: function() {
-      /*
-      из черновика скопировать в основную модель
-      ссылку на черновик удалить
-      модель сохранить
-      */
-      let that = this;
-      let oModel = that.getModel('Instance');
-      
-      oModel.setProperty('/draftId', null);
-      oModel.setProperty('/deleted', false);
-
-      let oData = oModel.getData();
-      var oInstanceData = _.cloneDeep(oData);
-      var aRows = oData.Rows;
-      var sRelationName = 'Rows';//TODO обобщить
-
-      aRows.forEach(function(row) {
-        $.ajax({
-          url: that.getApiUri() +
-            that.sInstanceModelName + '/' + that.sInstanceId + '/' +
-            sRelationName + '/' + oModel.getProperty(sPath + '/id'),
-          method: 'PUT',
-          data: JSON.stringify(row),
-          contentType: 'application/json',
-        });
-      });
-
-      that.aRowsRelationNames.forEach(function(relationName) {
-        delete oInstanceData[relationName];
-      });
-      
-      //deepClone
-      //все связи сохранить отдельно, т.к. некоторые могут быть новыми, а некоторые уже существовать
-      //удалить все связи
-      //только после этого сохранить сам объект
-
-
-
-      $.ajax({
-        url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
-        method: 'PATCH',
-        data: oModel.getJSON(),
-        contentType: 'application/json',
-      });//после этого можно удалить черновик
+      }).done(function(data) {
+          that.fnInstanceModelLoadData();
+        }
+      );
     },
 
     //работает
     onCancelActionPress: function(oControlEvent) {
       let that = this;
-      let oModel = that.getModel('Instance');
 
       $.ajax({
-        url: that.getApiUri() + that.sInstanceModelName + '/' + oModel.getProperty('/id'),
+        url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
         method: 'PATCH',
-        data: JSON.stringify({draft: false}),
+        data: JSON.stringify({edit: false}),
         contentType: 'application/json',
       }).done(function(data) {
         that.fnInstanceModelLoadData();
@@ -223,27 +183,26 @@ sap.ui.define([
     //работает
     onEditActionPress: function(oControlEvent) {
       let that = this;
-      let oModel = that.getModel('Instance');
 
       //проверить наличие черновика
-
       $.ajax({
-        url: that.getApiUri() + 'Drafts/',
-        method: 'POST',
-        data: JSON.stringify({instance: oModel.getJSON()}),
+        url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
+        method: 'PATCH',
+        data: JSON.stringify({edit: true}),
         contentType: 'application/json',
-      }).done(function(data) {
-        $.ajax({
-          url: that.getApiUri() + that.sInstanceModelName + '/' + oModel.getProperty('/id'),
-          method: 'PATCH',
-          data: JSON.stringify({
-            draftId: data.id,
-            draft: true,
-          }),
-          contentType: 'application/json',
-        });
-        that.fnInstanceModelLoadData();
       });
+      that.fnInstanceModelLoadData();
+    },
+
+    onHomeLinkPress: function(oControlEvent) {
+      let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+      oRouter.navTo('/');
+    },
+
+    onListLinkPress: function(oControlEvent) {
+      let that = this;
+      let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+      oRouter.navTo(that.sListPath);
     },
 
     //должно выполняться в фоновом режиме постоянно после каждого изменения

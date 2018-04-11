@@ -2,36 +2,21 @@
   "name": "SalesOrder",
   "forceId": true,
   "strict": true,
+  "base": "PersistedModel",
+  "mixins": {
+    "Common": {}
+  },
   "properties": {
     "name": "string",
-    "deleted": "boolean",
     "ownerId": "string",
     "ownerName": "string",
-    "customerName": "string",
-    "draftId": "string"
+    "customerName": "string"
   },
   "relations": {
-    "draft": {
-      "type": "belongsTo",
-      "model": "Draft",
-      "foreignKey": "draftId"
-    },
     "Rows": {
       "type": "hasMany",
       "model": "SalesOrderRow",
       "foreignKey": "parentId"
     }
-  },
-  "acls": [
-    {
-      "permission": "DENY",
-      "principalType": "ROLE",
-      "principalId": "$everyone"
-    },
-    {
-      "permission": "ALLOW",
-      "principalType": "ROLE",
-      "principalId": "$authenticated"
-    }
-  ]
+  }
 }

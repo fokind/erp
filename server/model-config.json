@@ -32,10 +32,6 @@
     "dataSource": "db",
     "public": false
   },
-  "Draft": {
-    "dataSource": "db",
-    "public": true
-  },
   "Employee": {
     "dataSource": "db",
     "public": true

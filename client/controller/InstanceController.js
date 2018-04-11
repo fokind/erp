@@ -194,17 +194,6 @@ sap.ui.define([
       that.fnInstanceModelLoadData();
     },
 
-    onHomeLinkPress: function(oControlEvent) {
-      let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-      oRouter.navTo('/');
-    },
-
-    onListLinkPress: function(oControlEvent) {
-      let that = this;
-      let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-      oRouter.navTo(that.sListPath);
-    },
-
     //должно выполняться в фоновом режиме постоянно после каждого изменения
     fnSaveDraft: function() {
       let that = this;

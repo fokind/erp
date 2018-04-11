@@ -38,7 +38,7 @@ sap.ui.define([
       this.fnRowOpen(oControlEvent.getSource().getBindingContext('Instance').sPath);
     },
 
-    fnRowOpen: function(sPath) {
+    fnRowOpen: function(sPath, bInitial) {
       let that = this;
       const sModelName = 'Instance';//TODO заменить на модель по умолчанию
       //заблокировать для остальных пользователей (весь заказ, включая дочерние объекты должен считаться заблокированным)
@@ -56,7 +56,15 @@ sap.ui.define([
         model: sModelName,
       });
       oDialog.addStyleClass('sapUiSizeCompact');
+
+      that.oRowBackup = bInitial ? undefined : _.cloneDeep(that.getModel(sModelName).getProperty(sPath));
+
       oDialog.open();
+    },
+
+    onRowAccept: function(oControlEvent) {
+      oControlEvent.getSource().getParent().close();
+      //that.getView().byId('salesOrderRowDialog').close();
     },
 
 		onRowSave: function(oControlEvent) {
@@ -105,13 +113,15 @@ sap.ui.define([
       let sPath = oBindingContext.sPath;
       let oModel = oBindingContext.oModel;
 
-      let jRes = jQuery.sap.syncGetJSON(
-        that.getApiUri() +
-        that.sInstanceModelName + '/' + that.sInstanceId + '/' +
-        sRelationName + '/' + oModel.getProperty(sPath + '/id')
-      );
-
-      oModel.setProperty(sPath, jRes.data);
+      if (that.oRowBackup) {
+        oModel.setProperty(sPath, that.oRowBackup);
+      } else {
+        let aRows = oModel.getProperty('/Rows');
+        let oRow = oModel.getProperty(sPath);
+        let iIndex = aRows.indexOf(oRow);
+        aRows.splice(iIndex, 1);
+        oModel.refresh();
+      }
 
       this.getView().byId('salesOrderRowDialog').close();
     },
@@ -121,45 +131,13 @@ sap.ui.define([
     },
 
     onAddActionPress: function(oControlEvent) {
-      //простой вариант для бизнес-процесса реализации под заказа
-      //при наполнении заказа товара еще нет, есть только наименование и характеристики
-      //строки заказов появляются в хотелках для покупки товаров
-      //в общем случае будем считать, что всегда сначала появляется запись в базе данных, а только после этого с ней начинается работа
-      //чтобы запись в базе данных не была активной, она изначально удаленная и при первом сохранении пользователем становится неудаленной
-      //чтобы можно было создать такую запись, в API не должно быть требований на заполненность полей, кроме тех, которые всегда должны быть заполненны по умолчанию, например автор изменений
-
       let that = this;
-      const sRelationName = 'Rows';
+      let oModel = that.getModel('Instance');
+      let aRows = that.getModel('Instance').getProperty('/Rows');
+      let oRow = {};
+      aRows.push(oRow);
 
-      $.ajax({
-        url: that.getApiUri() +
-          that.sInstanceModelName +
-          '/' + that.sInstanceId +
-          '/' + sRelationName,
-        method: 'POST',
-        data: JSON.stringify({deleted: true}),
-        contentType: 'application/json',
-      }).done(function(data) {
-        //изменить deleted на false
-        data.deleted = false;
-        //добавить в основную модель, запомнить, что здесь должно происходить аналогично простому открытию диалога
-
-        let oModel = that.getModel('Instance');
-        let aRows = oModel.getData().Rows;
-        aRows.push(data);
-        that.fnRowOpen('/' + sRelationName + '/' + aRows.indexOf(data));
-
-      }).fail(function(data) {
-        sap.m.MessageToast.show(that.getResourceBundle().getText('saveError'));
-      }).always(function(data) {});
-      
-
-      //для бизнес-процесса реализации со склада:
-      //условие, необходимые товары должны быть в списке товаров, если их нет, нужно завести
-      //диалог селектор товара с поиском
-      //после выбора товара открывается диалог редактирования строки
-      //товар должен быть подключен в виде отношения к модели строки
-      //только после этого выполняется метод POST
+      that.fnRowOpen('/Rows/' + aRows.indexOf(oRow), true);
     },
 
     onDeleteActionPress: function(oControlEvent) {

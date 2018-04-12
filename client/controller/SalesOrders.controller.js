@@ -2,29 +2,28 @@
 'use strict';
 
 sap.ui.define([
-  'sap/ui/core/mvc/Controller',
+  'tms/basic/controller/ListController',
 ], function(Controller) {
   return Controller.extend('tms.basic.controller.SalesOrders', {
     onInit: function() {
-      // let that = this;
-      // that.getView().setModel(new sap.ui.model.json.JSONModel());
-    },
-
-    onAfterRendering: function(oControlEvent) {
-      this.update();
-    },
-
-    update: function() {
       let that = this;
-      let oModel = that.getOwnerComponent().getModel('SalesOrders');
-      oModel.loadData(
-        $.sap.formatMessage(
-          '{0}SalesOrders',
-          that.getOwnerComponent()
-            .getManifestEntry('/sap.app/dataSources/api/uri')
-        ),
-        '', true, 'GET', false, false,
-      );
+      that.aConfigModels = [
+        {
+          name: 'SalesOrders',
+          filter: {
+            fields: {
+              name: true,
+              username: true,
+              email: true,
+              edit: true,
+              deleted: true
+            }
+          },
+        },
+      ];
+
+      var oRouter = that.getRouter();
+      oRouter.attachRoutePatternMatched(that._onRouteMatched, that);
     },
 
     onPress: function(oEvent) {
@@ -39,57 +38,34 @@ sap.ui.define([
       });
     },
 
-    onDeleteActionPress: function() {
-      let that = this;
-      var oView = that.getView();
-      var oDialog = oView.byId('confirmDeleteDialog');
-      // create dialog lazily
-      if (!oDialog) {
-         // create dialog via fragment factory
-         oDialog = sap.ui.xmlfragment(oView.getId(), 'tms.basic.view.Dialog', that);
-         oView.addDependent(oDialog);
-      }
+    onDeletePress: function(oEvent) {
+      let oView = this.getView().byId('salesOrderRows');
 
-      oDialog.open();
+      //должна быть проверка на возможность удаления
+      //всё это должно происходить в режиме редактирования
+      //запрашивать подтверждение на удаление
+      //оставлять возможность восстановить
+
+      // calculating the index of the selected list item
+      let oBindingContexts = oEvent.mParameters.listItem.oBindingContexts.SalesOrders;
+      // Removing the selected list item from the model based on the index
+      // calculated
+      var oModel = oBindingContexts.oModel;
+      var aData = oModel.getData();
+      var o = oModel.getProperty(oBindingContexts.sPath);
+      var iIndex = aData.indexOf(o);
+      aData.splice(iIndex, 1);
+      oModel.refresh();
+      console.log(oBindingContexts.sPath);
     },
 
 		onCloseDialog: function() {
+      //this.fnDeleteInstance();
 			this.getView().byId('confirmDeleteDialog').close();
 		},
 
     onAddActionPress: function(oControlEvent) {
-      //отправить запрос POST в API
-      let that = this;
-      let oAccessToken = Cookies.getJSON('AccessToken');
-
-      $.post({
-        url: $.sap.formatMessage(
-          '{0}SalesOrders',
-          that.getOwnerComponent()
-            .getManifestEntry('/sap.app/dataSources/api/uri')
-        ),
-      }).done(function (data) {
-        //вывести окно создания объекта
-        console.log(data);
-        //обновить таблицу
-        that.update();
-      }).fail(function (err) {
-        console.log(err);
-      });
-      //получить id, вывести сообщение
-    },    
-
-    onNavBack: function() {
-      let that = this;
-      let oHistory = sap.ui.core.routing.History.getInstance();
-      let sPreviousHash = oHistory.getPreviousHash();
-
-      if (sPreviousHash !== undefined) {
-        window.history.go(-1);
-      } else {
-        let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-        oRouter.navTo('home', {}, true);
-      }
+      this.fnAddInstance();
     },
   });
 });

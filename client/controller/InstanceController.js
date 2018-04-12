@@ -5,6 +5,8 @@ sap.ui.define([
 	'sap/ui/core/mvc/Controller',
 ], function(Controller) {
 	return Controller.extend('tms.basic.controller.InstanceController', {
+    //TODO подель на очень простой контроллер, с дополнительными моделями и с дочерними моделями
+
 		/**
 		 * Convenience method for accessing the router.
 		 * @public
@@ -54,8 +56,10 @@ sap.ui.define([
       let sInstanceModelName = that.sInstanceModelName;
       let oView = that.getView();
 
-      that.sInstanceId = sInstanceId;
-      that.fnLoadData(sInstanceId);
+      that.aConfigModels[0].id = sInstanceId;
+      that.aConfigModels.forEach(e => {
+        that.fnModelLoadData(e);
+      });
     },
 
     _onBindingChange: function(oEvent) {
@@ -65,133 +69,63 @@ sap.ui.define([
 			}
 		},
 
-    fnLoadData: function(sId) {
+    fnModelLoadData: function(oConfig) {
       let that = this;
-
-      that.fnInstanceModelLoadData();
-      if (that.aRelations) that.aRelations.forEach(function(relation) { that.fnRelationModelLoadData(relation.name); });
-      if (that.aModels) that.aModels.forEach(function(model) { that.fnModelLoadData(model.name); });
-    },
-
-    fnInstanceModelLoadData: function() {
-      let that = this;
-      let sInstanceModelName = that.sInstanceModelName;
-      let sInstanceId = that.sInstanceId;
-      that.getModel('Instance').loadData(
-        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
-        that.sInstanceModelName +
-        '/' + sInstanceId +
-        (that.oInstanceFilter ? '?filter=' + JSON.stringify(that.oInstanceFilter) : ''),
-        '', true, 'GET', false, false,
-      );
-    },
-
-    fnRelationModelLoadData: function(sRelationName) {
-      let that = this;
-      let oModel = that.getModel(sRelationName);
-      if (!oModel) oModel = that.setModel(new sap.ui.model.json.JSONModel(), sRelationName).getModel(sRelationName);
-
+      let sName = oConfig.name;
+      let sEntity = oConfig.entity;
+      let sId = oConfig.id;
+      let oFilter = oConfig.filter;
+      let oModel = that.getModel(sName);
+      if (!oModel) oModel = that.setModel(new sap.ui.model.json.JSONModel(), sName).getModel(sName);
+      
       oModel.loadData(
         that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
-        that.sInstanceModelName + '/' +
-        that.sInstanceId + '/' +
-        sRelationName,
-        '', true, 'GET', false, false,
+        (sEntity ? sEntity : sName) +
+        (sId ? '/' + sId : '') +
+        (oFilter ? '?filter=' + JSON.stringify(oFilter) : ''),
+        '', false, 'GET', false, false,
       );
     },
 
-    fnModelLoadData: function(sModelName) {
+    fnLoadInstance: function() {
       let that = this;
-      let oModel = that.getModel(sModelName);
-      if (!oModel) oModel = that.setModel(new sap.ui.model.json.JSONModel(), sModelName).getModel(sModelName);
-
-      oModel.loadData(
-        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
-        sModelName,
-        '', true, 'GET', false, false,
-      );
+      that.fnModelLoadData(that.aConfigModels[0]);
     },
 
-    navBack: function(sPrev) {
+    fnSaveInstance: function() {
       let that = this;
-      let oHistory = sap.ui.core.routing.History.getInstance();
-      let sPreviousHash = oHistory.getPreviousHash();
+      let oConfig = that.aConfigModels[0];
 
-      if (sPreviousHash !== undefined) {
-        window.history.go(-1);
-      } else {
-        let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-        oRouter.navTo(sPrev, {}, true);
+      //полуить клон
+      let oData = _.cloneDeep(that.getModel(oConfig.name).getData());
+      Object.assign(oData, {deleted: false, edit: false, draft: ''});
+
+      //удалить все связи
+      if (oConfig.filter && oConfig.filter.include) {
+        oConfig.filter.include.map('relation').forEach(r => delete oData[r]);
       }
-    },
-
-    onSaveActionPress: function(oControlEvent) {
-      this.fnSave();
-    },
-
-    fnSave: function() {
-      /*
-      из черновика скопировать в основную модель
-      ссылку на черновик удалить
-      модель сохранить
-      */
-      let that = this;
-      let oModel = that.getModel('Instance');
-      
-      oModel.setProperty('/edit', false);
-      oModel.setProperty('/draft', '');
-
-      let oData = oModel.getData();
-      //console.log(oModel);
-      var oInstanceData = _.cloneDeep(oData);
-      //console.log(oInstanceData);
-
-      //предварительно сохранить все связи по отдельности, если они являются частью сложной сущности
-
-      if (that.aRelationNames) {
-        that.aRelationNames.forEach(function(relationName) {
-          delete oInstanceData[relationName];
-        });
-      }
-      //console.log(oInstanceData);
-      
-      $.ajax({
-        url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
-        method: 'PATCH',
-        data: JSON.stringify(oInstanceData),
-        contentType: 'application/json',
-      }).done(function(data) {
-          that.fnInstanceModelLoadData();
-        }
-      );
-    },
-
-    //работает
-    onCancelActionPress: function(oControlEvent) {
-      let that = this;
 
       $.ajax({
-        url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
+        url: that.getApiUri() + oConfig.entity + '/' + oConfig.id,
         method: 'PATCH',
-        data: JSON.stringify({edit: false}),
+        data: JSON.stringify(oData),
         contentType: 'application/json',
       }).done(function(data) {
-        that.fnInstanceModelLoadData();
+        that.fnLoadInstance();
       });
     },
 
-    //работает
-    onEditActionPress: function(oControlEvent) {
+    fnPatchEdit: function(bEdit) {
       let that = this;
-
-      //проверить наличие черновика
+      let oConfig = that.aConfigModels[0];
       $.ajax({
-        url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId,
+        url: that.getApiUri() + oConfig.entity + '/' + oConfig.id,
         method: 'PATCH',
-        data: JSON.stringify({edit: true}),
+        data: JSON.stringify({edit: bEdit}),
         contentType: 'application/json',
+      }).done(function(bEdit) {
+        that.fnLoadInstance();
       });
-      that.fnInstanceModelLoadData();
     },
 
     //должно выполняться в фоновом режиме постоянно после каждого изменения

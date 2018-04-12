@@ -2,40 +2,115 @@
 'use strict';
 
 sap.ui.define([
-  'tms/basic/controller/InstanceController',
+  'tms/basic/controller/InstanceRelationsController',
 ], function(Controller) {
   return Controller.extend('tms.basic.controller.SalesOrder', {
 
     onInit: function() {
       let that = this;
-      that.sInstanceModelName = 'SalesOrders';
+      //that.sInstanceModelName = 'SalesOrders';
+      that.aConfigModels = [
+        {
+          name: 'Instance',
+          entity: 'SalesOrders',
+          filter: {include: [{
+            relation: 'Rows',
+            scope: {where: {deleted: false}} //не забыть удалить relation при сохранении
+          }]}
+        },
+        {
+          name: 'Employees',
+          filter: {where: {deleted: false}}
+        },
+      ];
       
-      that.oInstanceFilter = {include: {
+      
+      /*that.oInstanceFilter = {include: {
         relation: 'Rows',
         scope: {where: {deleted: false}},//не забыть удалить relation при сохранении
       }};
 
-      that.aRelationNames = ['Rows'];
+      that.aRelationNames = ['Rows'];*/
       //строка редактируется в диалоге
       //при закрытии диалога с сохранением обязательно адейтится соответствующая строчка
       //при роутинге назад должна апдейтиться соответствующая строчка, возможно еще в момент сохранения
 
-      that.aModels = [
+      /*that.aModels = [
         {name: 'Employees'},
-      ];
+      ];*/
 
-      let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-      oRouter.getRoute('sales-order').attachPatternMatched(that._onRouteMatched, that);
-
-      that.setModel(new sap.ui.model.json.JSONModel(), 'Instance');//TODO заменить на контекст
+      var oRouter = that.getRouter();
+      oRouter.attachRoutePatternMatched(that._onRouteMatched, that);
     },
 
-    onNavBack: function() {
-      this.navBack('sales-orders')
-    },
+    /*onInstancePropertyChange: function(oEvent) {
+      //console.log(oEvent);
+      let that = this;
+      let oModel = that.getModel('Instance');
+      let aRows = oModel.getProperty('/Rows');
+      let fTotal = _.sum(aRows
+        .filter(e => !e.deleted &&
+          !isNaN(e.quantity) &&
+          !isNaN(e.unitPrice))
+        .map(e => e.quantity * e.unitPrice));
+
+      //console.log(fTotal);
+    },*/
 
     onRowDetailPress: function(oControlEvent) {
-      this.fnRowOpen(oControlEvent.getSource().getBindingContext('Instance').sPath);
+      //при открытии диалога передавать клон связанного элемента
+      //при закрытии копировать клон в модель сущности
+      let that = this;
+      let oContext = oControlEvent.getSource().getBindingContext('Instance');
+      
+      let sPath = oContext.getPath();
+      //oControlEvent.getSource().getBindingContext('Instance').sPath;
+      this.fnRowOpen(sPath);
+    },
+
+    onSaveActionPress: function(oControlEvent) {
+      //сохранить строки
+      this.fnRowsSave();
+      //сохранить сам элемент
+      this.fnSaveInstance();
+    },
+
+    onDeleteRow: function(oControlEvent) {
+      //пометить как удаленный
+      //console.log(oControlEvent);
+      let o = oControlEvent.getParameters('listItem');
+      let oBindingContext = o.listItem.getBindingContext('Instance');
+      let sPath = oBindingContext.sPath;
+      let oModel = oBindingContext.oModel;
+      //let o1 = oModel.getObject(sPath);
+      //console.log(o1);
+      //o1.deleted = true;
+
+      //плохо работает нотификация вложенных объектов
+      
+      oModel.setProperty(sPath + '/deleted', true);
+      oModel.firePropertyChange({
+        path: sPath + '/deleted',
+        value: true
+      })
+      //oModel.refresh();
+    },
+
+		fnRowsSave: function() {
+      //replaceOrCreate
+      let that = this;
+      let aRows = that.getModel('Instance').getProperty('/Rows');
+
+      aRows.forEach(function(oRow) {
+        oRow.parentId = that.sInstanceId;
+        $.ajax({
+          url: that.getApiUri() + 'SalesOrderRows/replaceOrCreate',
+          method: 'POST',
+          data: JSON.stringify(oRow),
+          contentType: 'application/json',
+        });
+      });
+
     },
 
     fnRowOpen: function(sPath, bInitial) {
@@ -46,24 +121,46 @@ sap.ui.define([
       var oView = that.getView();
       var oDialog = oView.byId('salesOrderRowDialog');
       
+      
+
       if (!oDialog) {
         oDialog = sap.ui.xmlfragment(oView.getId(), 'tms.basic.view.SalesOrderRowDialog', that);
         oView.addDependent(oDialog);
       }
 
-      oDialog.bindElement({
+      let oRow = that.getModel(sModelName).getProperty(sPath);
+      let oData = _.cloneDeep(oRow);
+      oDialog.setModel(new sap.ui.model.json.JSONModel(oData), 'Row');
+
+      /*oDialog.bindElement({
         path: sPath,
         model: sModelName,
-      });
+      });*/
       oDialog.addStyleClass('sapUiSizeCompact');
 
-      that.oRowBackup = bInitial ? undefined : _.cloneDeep(that.getModel(sModelName).getProperty(sPath));
+      //that.oRowBackup = bInitial ? undefined : _.cloneDeep(that.getModel(sModelName).getProperty(sPath));
 
       oDialog.open();
     },
 
     onRowAccept: function(oControlEvent) {
+      let that = this;
+      let oDialog = oControlEvent.getSource().oParent;
+      let oRowModel = oDialog.getModel('Row');
+
+      let oView = that.getView().byId('salesOrderRows');
+      console.log(oView);
+
+      let oContext = oView.getBindingContext('Instance');
+      let sPath = oContext.getPath();
+
+      console.log(sPath);
+
+
+      Object.assign(oDialog.oRow, oRowModel);
+      console.log(oDialog.oRow);
       this.getModel('Instance').refresh();
+      console.log(this.getModel('Instance'));
       oControlEvent.getSource().getParent().close();
     },
 
@@ -126,11 +223,17 @@ sap.ui.define([
       this.getView().byId('salesOrderRowDialog').close();
     },
     
-    formatterCalculateRowTotal: function(unitPrice, quantity) {
-      return (unitPrice === undefined || quantity === undefined) ? 0 : unitPrice * quantity;
+    formatterCalculateRowTotal: function(fUnitPrice, fQuantity) {
+      return (fUnitPrice === undefined || fQuantity === undefined) ? 0 : fUnitPrice * fQuantity;
+    },
+
+    formatterCalculateTotal: function(aRows) {
+      console.log(aRows);
+      return 0;
     },
 
     onAddActionPress: function(oControlEvent) {
+      //создать в базе данных, полученный объект вывести
       let that = this;
       let oModel = that.getModel('Instance');
       let aRows = that.getModel('Instance').getProperty('/Rows');

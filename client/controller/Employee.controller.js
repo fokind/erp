@@ -7,18 +7,36 @@ sap.ui.define([
   return Controller.extend('tms.basic.controller.Employee', {
     onInit: function() {
       let that = this;
-      that.sInstanceModelName = 'Employees';
-      that.aModels = [];
-      that.sListPath = 'employees';
+      that.aConfigModels = [
+        {
+          name: 'Instance',
+          entity: 'Employees',
+          filter: {
+            fields: {
+              name: true,
+              username: true,
+              email: true,
+              edit: true,
+              deleted: true
+            }
+          },
+        },
+      ];
 
-      let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-      oRouter.getRoute('employee').attachPatternMatched(that._onRouteMatched, that);
-
-      that.setModel(new sap.ui.model.json.JSONModel(), 'Instance');
-      
+      var oRouter = that.getRouter();
+      oRouter.attachRoutePatternMatched(that._onRouteMatched, that);
     },
 
-    onNavBack: function() { this.navBack('employees') },
+    onEditActionPress: function(oControlEvent) {
+      this.fnPatchEdit(true);
+    },
 
+    onSaveActionPress: function(oControlEvent) {
+      this.fnSaveInstance();
+    },
+
+    onCancelActionPress: function(oControlEvent) {
+      this.fnPatchEdit(false);
+    },
   });
 });

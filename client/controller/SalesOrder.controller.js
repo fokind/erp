@@ -92,7 +92,7 @@ sap.ui.define([
       oModel.firePropertyChange({
         path: sPath + '/deleted',
         value: true
-      })
+      });
       //oModel.refresh();
     },
 
@@ -120,8 +120,6 @@ sap.ui.define([
 
       var oView = that.getView();
       var oDialog = oView.byId('salesOrderRowDialog');
-      
-      
 
       if (!oDialog) {
         oDialog = sap.ui.xmlfragment(oView.getId(), 'tms.basic.view.SalesOrderRowDialog', that);
@@ -130,38 +128,37 @@ sap.ui.define([
 
       let oRow = that.getModel(sModelName).getProperty(sPath);
       let oData = _.cloneDeep(oRow);
+      
       oDialog.setModel(new sap.ui.model.json.JSONModel(oData), 'Row');
-
-      /*oDialog.bindElement({
-        path: sPath,
-        model: sModelName,
-      });*/
       oDialog.addStyleClass('sapUiSizeCompact');
-
-      //that.oRowBackup = bInitial ? undefined : _.cloneDeep(that.getModel(sModelName).getProperty(sPath));
-
       oDialog.open();
     },
 
     onRowAccept: function(oControlEvent) {
       let that = this;
+
+      /*let o = oControlEvent.getParameters('listItem');
+      let oBindingContext = o.listItem.getBindingContext('Instance');
+      console.log(oBindingContext);
+      let sPath = oBindingContext.sPath;
+      let oModel = oBindingContext.oModel;*/
+
       let oDialog = oControlEvent.getSource().oParent;
-      let oRowModel = oDialog.getModel('Row');
+      console.log(oDialog);
+      /*let oRowModel = oDialog.getModel('Row');
+      //let oModel = that.getModel('Instance');
+      let aRows = oModel.getProperty('/Rows');
+      let oDraft = oRowModel.getData();
+      console.log(aRows);
+      console.log(oDraft);
+      let oRow = _.findIndex(aRows, e => e.id == oDraft.id);
+      let iIndex = _.findIndex(aRows, function(e) { return e.id == oDraft.id; });
+      console.log(oRow);
+      console.log(iIndex);
+      Object.assign(oRow, oDraft);
 
-      let oView = that.getView().byId('salesOrderRows');
-      console.log(oView);
-
-      let oContext = oView.getBindingContext('Instance');
-      let sPath = oContext.getPath();
-
-      console.log(sPath);
-
-
-      Object.assign(oDialog.oRow, oRowModel);
-      console.log(oDialog.oRow);
-      this.getModel('Instance').refresh();
-      console.log(this.getModel('Instance'));
-      oControlEvent.getSource().getParent().close();
+      oModel.refresh();*/
+      oDialog.close();
     },
 
 		onRowSave: function(oControlEvent) {
@@ -204,7 +201,7 @@ sap.ui.define([
     },
 
     onRowCancel: function(oControlEvent) {
-      let that = this;
+      /*let that = this;
       const sRelationName = 'Rows';
       let oBindingContext = oControlEvent.getSource().oParent.getBindingContext('Instance');
       let sPath = oBindingContext.sPath;
@@ -218,9 +215,9 @@ sap.ui.define([
         let iIndex = aRows.indexOf(oRow);
         aRows.splice(iIndex, 1);
         oModel.refresh();
-      }
-
-      this.getView().byId('salesOrderRowDialog').close();
+      }*/
+      oControlEvent.getSource().oParent.close();
+      //this.getView().byId('salesOrderRowDialog').close();
     },
     
     formatterCalculateRowTotal: function(fUnitPrice, fQuantity) {
@@ -232,15 +229,49 @@ sap.ui.define([
       return 0;
     },
 
-    onAddActionPress: function(oControlEvent) {
+    onAddActionPress: function() {
+      let that = this;
+
+      let oModel = that.getModel('Instance');
+      let aRows = oModel.getProperty('/Rows');
+
+      let oConfig = that.aConfigModels[0];
+      let sEntity = oConfig.entity;
+      let sId = oConfig.id;
+      let sRelation = oConfig.filter.include[0].relation;
+
+      $.ajax({
+        url: that.getApiUri() + sEntity + '/' + sId + '/' + sRelation,
+        method: 'POST',
+        data: JSON.stringify({deleted: false}),
+        contentType: 'application/json',
+      }).done(function(data) {
+        aRows.push(data);
+        oModel.refresh();
+        that.fnRowOpen('/Rows/' + aRows.indexOf(data), true);
+      });
+    },
+
+    onAddActionPress2: function(oControlEvent) {
       //создать в базе данных, полученный объект вывести
       let that = this;
       let oModel = that.getModel('Instance');
-      let aRows = that.getModel('Instance').getProperty('/Rows');
-      let oRow = {};
-      aRows.push(oRow);
+      let aRows = oModel.getProperty('/Rows');
 
-      that.fnRowOpen('/Rows/' + aRows.indexOf(oRow), true);
+      let oConfig = that.aConfigModels[0];
+      let sEntity = oConfig.entity;
+      let sId = oConfig.id;
+      let sRelation = oConfig.filter.include[0].relation;
+
+      $.ajax({
+        url: that.getApiUri() + sEntity + '/' + sId + '/' + sRelation,
+        method: 'POST',
+        data: JSON.stringify({deleted: false}),
+        contentType: 'application/json',
+      }).done(function(data) {
+        aRows.push(data);
+        that.fnRowOpen('/Rows/' + aRows.indexOf(data), true);
+      });
     },
 
     onDeleteActionPress: function(oControlEvent) {

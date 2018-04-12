@@ -84,11 +84,12 @@ sap.ui.define([
       let that = this;
       let oConfig = that.aConfigModels[0];
       let sName = oConfig.name;
-      let oFilter = oConfig.oFilter;
+      let oFilter = oConfig.filter;
 
       $.ajax({
         url: that.getApiUri() + sName,
         method: 'POST',
+        data: JSON.stringify({deleted: false}),
         contentType: 'application/json',
       }).done(function(data) {
         $.ajax({
@@ -104,16 +105,15 @@ sap.ui.define([
       });
     },
 
-    fnDeleteInstance: function() {
+    fnDeleteInstance: function(sId) {
       let that = this;
       let oConfig = that.aConfigModels[0];
       let sName = oConfig.name;
-      let oFilter = oConfig.oFilter;
 
       $.ajax({
-        url: that.getApiUri() + sName + '/' + data.id,
+        url: that.getApiUri() + sName + '/' + sId,
         method: 'PATCH',
-        data: JSON.stringify({delete: true}),
+        data: JSON.stringify({deleted: true}),
         contentType: 'application/json',
       }).done(function(data) {
         let oModel = that.getModel(sName);

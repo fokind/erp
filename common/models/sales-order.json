@@ -10,6 +10,7 @@
     "name": "string",
     "ownerId": "string",
     "ownerName": "string",
+    "total": "number",
     "customerName": "string"
   },
   "relations": {

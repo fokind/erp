@@ -76,7 +76,10 @@ sap.ui.define([
       let sId = oConfig.id;
       let oFilter = oConfig.filter;
       let oModel = that.getModel(sName);
-      if (!oModel) oModel = that.setModel(new sap.ui.model.json.JSONModel(), sName).getModel(sName);
+      if (!oModel) {
+        oModel = that.setModel(new sap.ui.model.json.JSONModel(), sName).getModel(sName);
+        if (that.onPropertyChange) oModel.attachPropertyChange(that.onPropertyChange, that);
+      }
       
       oModel.loadData(
         that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
@@ -98,11 +101,11 @@ sap.ui.define([
 
       //полуить клон
       let oData = _.cloneDeep(that.getModel(oConfig.name).getData());
-      Object.assign(oData, {deleted: false, edit: false, draft: ''});
+      Object.assign(oData, {edit: false, draft: ''});
 
       //удалить все связи
       if (oConfig.filter && oConfig.filter.include) {
-        oConfig.filter.include.map('relation').forEach(r => delete oData[r]);
+        oConfig.filter.include.map(e => e.relation).forEach(r => delete oData[r]);
       }
 
       $.ajax({

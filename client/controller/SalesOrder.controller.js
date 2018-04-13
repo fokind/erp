@@ -23,6 +23,7 @@ sap.ui.define([
           filter: {where: {deleted: false}}
         },
       ];
+
       
       
       /*that.oInstanceFilter = {include: {
@@ -43,19 +44,27 @@ sap.ui.define([
       oRouter.attachRoutePatternMatched(that._onRouteMatched, that);
     },
 
-    /*onInstancePropertyChange: function(oEvent) {
-      //console.log(oEvent);
-      let that = this;
-      let oModel = that.getModel('Instance');
-      let aRows = oModel.getProperty('/Rows');
-      let fTotal = _.sum(aRows
-        .filter(e => !e.deleted &&
-          !isNaN(e.quantity) &&
-          !isNaN(e.unitPrice))
-        .map(e => e.quantity * e.unitPrice));
+    onPropertyChange: function(oEvent) {
+      let oContext = oEvent.getParameter('context');
+      if (oContext && /^\/Rows\//.exec(oContext.sPath)) {
+        let that = this;
+        let oModel = that.getModel('Instance');
+        console.log(oModel);
+        let aRows = oModel.getProperty('/Rows');
+        console.log(aRows);
+        let fTotal = _.sum(aRows
+          .filter(e => !e.deleted &&
+            !isNaN(e.quantity) &&
+            !isNaN(e.unitPrice))
+          .map(e => e.quantity * e.unitPrice));
+        oModel.setProperty('/total', fTotal);
+      };
+    },
 
-      //console.log(fTotal);
-    },*/
+    onCancelActionPress: function(oControlEvent) {
+      this.fnPatchEdit(false);
+    },
+    
 
     onRowDetailPress: function(oControlEvent) {
       //при открытии диалога передавать клон связанного элемента
@@ -73,8 +82,6 @@ sap.ui.define([
 
       var oView = that.getView();
       let oContext = oControlEvent.getSource().getBindingContext('Instance');
-      console.log(oControlEvent.getSource());
-      console.log(oContext);
       var oDialog = oView.byId('salesOrderRowDialog');
 
       if (!oDialog) {
@@ -82,11 +89,6 @@ sap.ui.define([
         oView.addDependent(oDialog);
       }
 
-      //let oRow = that.getModel(sModelName).getProperty(sPath);
-      //let oData = _.cloneDeep(oRow);
-      
-      //oDialog.setModel(new sap.ui.model.json.JSONModel(oData), 'Row');
-      //oDialog.setModel(oContext.oModel, 'Instance');
       oDialog.bindElement({model: 'Instance', path: oContext.sPath});
       oDialog.addStyleClass('sapUiSizeCompact');
       oDialog.open();
@@ -101,13 +103,11 @@ sap.ui.define([
 
     onDeleteRow: function(oControlEvent) {
       //пометить как удаленный
-      //console.log(oControlEvent);
       let o = oControlEvent.getParameters('listItem');
       let oBindingContext = o.listItem.getBindingContext('Instance');
       let sPath = oBindingContext.sPath;
       let oModel = oBindingContext.oModel;
       //let o1 = oModel.getObject(sPath);
-      //console.log(o1);
       //o1.deleted = true;
 
       //плохо работает нотификация вложенных объектов
@@ -121,17 +121,16 @@ sap.ui.define([
     },
 
 		fnRowsSave: function() {
-      //replaceOrCreate
       let that = this;
       let aRows = that.getModel('Instance').getProperty('/Rows');
-
+      let sParentId = that.aConfigModels[0].id;
       aRows.forEach(function(oRow) {
-        oRow.parentId = that.sInstanceId;
+        oRow.parentId = sParentId;
         $.ajax({
           url: that.getApiUri() + 'SalesOrderRows/replaceOrCreate',
           method: 'POST',
           data: JSON.stringify(oRow),
-          contentType: 'application/json',
+          contentType: 'application/json'
         });
       });
 
@@ -164,7 +163,6 @@ sap.ui.define([
       //oDialog.setModel(oContext.oModel, 'Instance');
       let aRows = this.getModel('Instance').getProperty('/Rows');
       let sPath = '/Rows/' + aRows.indexOf(oRow);
-      console.log(sPath);
 
       oDialog.bindElement({model: 'Instance', path: sPath});
       oDialog.addStyleClass('sapUiSizeCompact');
@@ -183,11 +181,7 @@ sap.ui.define([
       let sPath = oBindingContext.sPath;
       let oModel = oBindingContext.oModel;
       let oData = oModel.getProperty(sPath);
-      var oInstanceData = _.cloneDeep(oData);
 
-      that.aRowsRelationNames.forEach(function(relationName) {
-        delete oInstanceData[relationName];
-      });
       // для одного отношения с одним вложенным отношением по простому
       //console.log(new sap.ui.model.json.JSONModel(that.oInstanceFilter));
       //console.log(that.oInstanceFilter.include.scope.include);
@@ -244,6 +238,10 @@ sap.ui.define([
       return 0;
     },
 
+    onEditActionPress: function() {
+      this.fnPatchEdit(true);
+    },
+
     onAddActionPress: function() {
       let that = this;
 
@@ -260,6 +258,7 @@ sap.ui.define([
         method: 'POST',
         contentType: 'application/json',
       }).done(function(data) {
+        data.deleted = false;
         aRows.push(data);
         oModel.refresh();
         that.fnRowOpen(data);

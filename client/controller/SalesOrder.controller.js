@@ -40,6 +40,11 @@ sap.ui.define([
         {name: 'Employees'},
       ];*/
 
+      let m = this.getOwnerComponent().getModel('SalesOrders');
+      console.log(m);//прибиндить из главного списка
+
+
+
       var oRouter = that.getRouter();
       oRouter.attachRoutePatternMatched(that._onRouteMatched, that);
     },

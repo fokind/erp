@@ -71,7 +71,18 @@ sap.ui.define([
       let oFilter = oConfig.filter;
       let oModel = that.getModel(sName);
       if (!oModel) oModel = that.setModel(new sap.ui.model.json.JSONModel(), sName).getModel(sName);
+
+      let m = this.getOwnerComponent().getModel('SalesOrders');
+
+      m.loadData(
+        that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
+        (sEntity ? sEntity : sName) +
+        (oFilter ? '?filter=' + JSON.stringify(oFilter) : ''),
+        '', false, 'GET', false, false,
+      );
       
+      console.log(m);//использовать глобоальную модель!!!!!!!!!!!
+
       oModel.loadData(
         that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
         (sEntity ? sEntity : sName) +

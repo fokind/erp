@@ -53,15 +53,6 @@
 					"bundleName": "tms.basic.i18n.i18n"
 				}
 			},
-			"Departments": {
-				"type": "sap.ui.model.json.JSONModel"
-			},
-			"Department": {
-				"type": "sap.ui.model.json.JSONModel"
-			},
-			"Customers": {
-				"type": "sap.ui.model.json.JSONModel"
-			},
 			"SalesOrders": {
 				"type": "sap.ui.model.json.JSONModel"
 			},

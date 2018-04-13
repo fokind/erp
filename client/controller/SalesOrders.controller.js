@@ -7,22 +7,10 @@ sap.ui.define([
   return Controller.extend('tms.basic.controller.SalesOrders', {
     onInit: function() {
       let that = this;
-      that.aConfigModels = [
-        {
-          name: 'SalesOrders',
-          filter: {
-            where: {deleted: false},
-            fields: {
-              id: true,
-              name: true,
-              username: true,
-              email: true,
-              edit: true,
-              deleted: true
-            }
-          },
-        },
-      ];
+      that.aConfigModels = [{
+        name: 'SalesOrders',
+        filter: {where: {deleted: false}},
+      }];
 
       var oRouter = that.getRouter();
       oRouter.attachRoutePatternMatched(that._onRouteMatched, that);
@@ -66,6 +54,7 @@ sap.ui.define([
 
     onAddActionPress: function(oControlEvent) {
       this.fnAddInstance();
+      //перейти в созданный объект
     },
   });
 });

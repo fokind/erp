@@ -61,11 +61,35 @@ sap.ui.define([
       //при открытии диалога передавать клон связанного элемента
       //при закрытии копировать клон в модель сущности
       let that = this;
-      let oContext = oControlEvent.getSource().getBindingContext('Instance');
+      //let oContext = oControlEvent.getSource().getBindingContext('Instance');
       
-      let sPath = oContext.getPath();
-      //oControlEvent.getSource().getBindingContext('Instance').sPath;
-      this.fnRowOpen(sPath);
+      //let sPath = oContext.getPath();
+      ///oControlEvent.getSource().getBindingContext('Instance').sPath;
+      //this.fnRowOpen(sPath);
+
+      //let that = this;
+      //const sModelName = 'Instance';//TODO заменить на модель по умолчанию
+      //заблокировать для остальных пользователей (весь заказ, включая дочерние объекты должен считаться заблокированным)
+
+      var oView = that.getView();
+      let oContext = oControlEvent.getSource().getBindingContext('Instance');
+      console.log(oControlEvent.getSource());
+      console.log(oContext);
+      var oDialog = oView.byId('salesOrderRowDialog');
+
+      if (!oDialog) {
+        oDialog = sap.ui.xmlfragment(oView.getId(), 'tms.basic.view.SalesOrderRowDialog', that);
+        oView.addDependent(oDialog);
+      }
+
+      //let oRow = that.getModel(sModelName).getProperty(sPath);
+      //let oData = _.cloneDeep(oRow);
+      
+      //oDialog.setModel(new sap.ui.model.json.JSONModel(oData), 'Row');
+      //oDialog.setModel(oContext.oModel, 'Instance');
+      oDialog.bindElement({model: 'Instance', path: oContext.sPath});
+      oDialog.addStyleClass('sapUiSizeCompact');
+      oDialog.open();
     },
 
     onSaveActionPress: function(oControlEvent) {
@@ -113,9 +137,16 @@ sap.ui.define([
 
     },
 
-    fnRowOpen: function(sPath, bInitial) {
+    fnRowOpen: function(oRow) {
       let that = this;
-      const sModelName = 'Instance';//TODO заменить на модель по умолчанию
+      //let oContext = oControlEvent.getSource().getBindingContext('Instance');
+      
+      //let sPath = oContext.getPath();
+      ///oControlEvent.getSource().getBindingContext('Instance').sPath;
+      //this.fnRowOpen(sPath);
+
+      //let that = this;
+      //const sModelName = 'Instance';//TODO заменить на модель по умолчанию
       //заблокировать для остальных пользователей (весь заказ, включая дочерние объекты должен считаться заблокированным)
 
       var oView = that.getView();
@@ -126,38 +157,22 @@ sap.ui.define([
         oView.addDependent(oDialog);
       }
 
-      let oRow = that.getModel(sModelName).getProperty(sPath);
-      let oData = _.cloneDeep(oRow);
+      //let oRow = that.getModel(sModelName).getProperty(sPath);
+      //let oData = _.cloneDeep(oRow);
       
-      oDialog.setModel(new sap.ui.model.json.JSONModel(oData), 'Row');
+      //oDialog.setModel(new sap.ui.model.json.JSONModel(oData), 'Row');
+      //oDialog.setModel(oContext.oModel, 'Instance');
+      let aRows = this.getModel('Instance').getProperty('/Rows');
+      let sPath = '/Rows/' + aRows.indexOf(oRow);
+      console.log(sPath);
+
+      oDialog.bindElement({model: 'Instance', path: sPath});
       oDialog.addStyleClass('sapUiSizeCompact');
       oDialog.open();
     },
 
     onRowAccept: function(oControlEvent) {
-      let that = this;
-
-      /*let o = oControlEvent.getParameters('listItem');
-      let oBindingContext = o.listItem.getBindingContext('Instance');
-      console.log(oBindingContext);
-      let sPath = oBindingContext.sPath;
-      let oModel = oBindingContext.oModel;*/
-
       let oDialog = oControlEvent.getSource().oParent;
-      console.log(oDialog);
-      /*let oRowModel = oDialog.getModel('Row');
-      //let oModel = that.getModel('Instance');
-      let aRows = oModel.getProperty('/Rows');
-      let oDraft = oRowModel.getData();
-      console.log(aRows);
-      console.log(oDraft);
-      let oRow = _.findIndex(aRows, e => e.id == oDraft.id);
-      let iIndex = _.findIndex(aRows, function(e) { return e.id == oDraft.id; });
-      console.log(oRow);
-      console.log(iIndex);
-      Object.assign(oRow, oDraft);
-
-      oModel.refresh();*/
       oDialog.close();
     },
 
@@ -243,12 +258,11 @@ sap.ui.define([
       $.ajax({
         url: that.getApiUri() + sEntity + '/' + sId + '/' + sRelation,
         method: 'POST',
-        data: JSON.stringify({deleted: false}),
         contentType: 'application/json',
       }).done(function(data) {
         aRows.push(data);
         oModel.refresh();
-        that.fnRowOpen('/Rows/' + aRows.indexOf(data), true);
+        that.fnRowOpen(data);
       });
     },
 

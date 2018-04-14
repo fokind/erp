@@ -100,19 +100,14 @@ sap.ui.define([
       $.ajax({
         url: that.getApiUri() + sName,
         method: 'POST',
-        data: JSON.stringify({deleted: false}),
+        data: JSON.stringify({deleted: true}),
         contentType: 'application/json',
       }).done(function(data) {
-        $.ajax({
-          url: that.getApiUri() + sName + '/' + data.id +
-          (oFilter ? '?filter=' + JSON.stringify(oFilter) : ''),
-          method: 'GET',
-          contentType: 'application/json',
-        }).done(function(data) {
-          let oModel = that.getModel(sName);
-          oModel.getData().push(data);
-          oModel.refresh();
-        });
+        data.deleted = false;
+        let oModel = that.getModel(sName);
+        oModel.getData().push(data);
+        oModel.refresh();
+        that.navTo(data);
       });
     },
 

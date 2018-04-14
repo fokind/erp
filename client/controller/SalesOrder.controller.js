@@ -54,10 +54,9 @@ sap.ui.define([
       if (oContext && /^\/Rows\//.exec(oContext.sPath)) {
         let that = this;
         let oModel = that.getModel('Instance');
-        console.log(oModel);
         let aRows = oModel.getProperty('/Rows');
-        console.log(aRows);
-        let fTotal = _.sum(aRows
+
+        let fTotal = aRows.length == 0 ? 0 : _.sum(aRows
           .filter(e => !e.deleted &&
             !isNaN(e.quantity) &&
             !isNaN(e.unitPrice))
@@ -103,6 +102,8 @@ sap.ui.define([
       //сохранить строки
       this.fnRowsSave();
       //сохранить сам элемент
+      let oModel = this.getModel('Instance');
+      oModel.setProperty('/deleted', false);
       this.fnSaveInstance();
     },
 

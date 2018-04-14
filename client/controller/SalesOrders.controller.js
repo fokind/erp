@@ -54,7 +54,14 @@ sap.ui.define([
 
     onAddActionPress: function(oControlEvent) {
       this.fnAddInstance();
-      //перейти в созданный объект
+    },
+
+    navTo: function(oData) {
+      let that = this;
+      let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+      oRouter.navTo('sales-order', {
+        id: oData.id,
+      });
     },
   });
 });

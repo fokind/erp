@@ -50,17 +50,24 @@ sap.ui.define([
     },
 
     onPropertyChange: function(oEvent) {
+      let aParameters = oEvent.getParameters();
       let oContext = oEvent.getParameter('context');
-      if (oContext && /^\/Rows\//.exec(oContext.sPath)) {
+      console.log(oContext);
+      console.log(aParameters);
+      if ((oContext && /^\/Rows\//.exec(oContext.sPath)) || (aParameters && /^\/Rows\//.exec(aParameters.path))) {
+        console.log(oContext);
+        
         let that = this;
         let oModel = that.getModel('Instance');
-        let aRows = oModel.getProperty('/Rows');
+        let aRows = oModel.getProperty('/Rows').filter(e => !e.deleted &&
+          !isNaN(e.quantity) &&
+          !isNaN(e.unitPrice));
 
+        console.log(aRows);
+          
         let fTotal = aRows.length == 0 ? 0 : _.sum(aRows
-          .filter(e => !e.deleted &&
-            !isNaN(e.quantity) &&
-            !isNaN(e.unitPrice))
           .map(e => e.quantity * e.unitPrice));
+
         oModel.setProperty('/total', fTotal);
       };
     },

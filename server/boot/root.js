@@ -2,7 +2,7 @@
 
 module.exports = function(server) {
   var Employee = server.models.Employee;
-  Employee.create({username: 'user', email: 'user@example.com', password: '1'});
+  Employee.create({name: 'Дмитрий', username: 'user', email: 'user@example.com', password: '1', deleted: false});
   
   // Install a `/` route that returns server status
   var router = server.loopback.Router();

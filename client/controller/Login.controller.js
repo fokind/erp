@@ -20,7 +20,7 @@ sap.ui.define([
       $.post(
         {
           url: $.sap.formatMessage(
-            '{0}Users/login',
+            '{0}Employees/login',
             that.getOwnerComponent()
               .getManifestEntry('/sap.app/dataSources/api/uri')
           ),
@@ -31,13 +31,13 @@ sap.ui.define([
           contentType: 'application/json',
         })
       .done(function(data, status, xhr) {
-        Cookies.set('AccessToken', data);
+        window.localStorage.setItem('accessToken', data.id);
         MessageToast.show(oResourceBundle.getText('authSuccess'));
         that.onNavBack();
         // sap.ui.core.UIComponent.getRouterFor(oView).navTo('home');
       })
       .fail(function(data) {
-        Cookies.remove('AccessToken');
+        window.localStorage.removeItem('accessToken');
         MessageToast.show(oResourceBundle.getText('authError'));
       });
     },
@@ -47,20 +47,19 @@ sap.ui.define([
       let oView = that.getView();
       let oModel = oView.getModel();
       let oResourceBundle = oView.getModel('i18n').getResourceBundle();
-      let oAccessToken = Cookies.getJSON('AccessToken');
+      let oAccessToken = window.localStorage.getItem('accessToken');
 
       if (oAccessToken) {
-        $.post(
-          {
-            url: $.sap.formatMessage(
-              '{0}Users/logout',
-              that.getOwnerComponent()
-                .getManifestEntry('/sap.app/dataSources/api/uri')
-            ),
-            contentType: 'application/json',
-            headers: {'Authorization': oAccessToken.id},
-          });
-        Cookies.remove('AccessToken');
+        $.post({
+          url: $.sap.formatMessage(
+            '{0}Employees/logout',
+            that.getOwnerComponent()
+              .getManifestEntry('/sap.app/dataSources/api/uri')
+          ),
+          contentType: 'application/json',
+          headers: {'Authorization': oAccessToken.id},
+        });
+        window.localStorage.removeItem('accessToken');
         MessageToast.show(oResourceBundle.getText('authLogoutSuccess'));
       }
     },

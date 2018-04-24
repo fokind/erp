@@ -50,17 +50,6 @@ sap.ui.define([
 			return this.getOwnerComponent().getModel('i18n').getResourceBundle();
     },
 
-    _onRouteMatched: function(oEvent) {
-      let that = this;
-      let sInstanceId = oEvent.getParameter('arguments').id;
-      let sInstanceModelName = that.sInstanceModelName;
-      let oView = that.getView();
-
-      that.aConfigModels[0].id = sInstanceId;
-      that.aConfigModels.forEach(e => {
-        that.fnModelLoadData(e);
-      });
-    },
 
     _onBindingChange: function(oEvent) {
 			// No data for the binding
@@ -70,7 +59,7 @@ sap.ui.define([
 		},
 
     fnModelLoadData: function(oConfig) {
-      let that = this;
+      /*let that = this;
       let sName = oConfig.name;
       let sEntity = oConfig.entity;
       let sId = oConfig.id;
@@ -79,32 +68,32 @@ sap.ui.define([
       if (!oModel) {
         oModel = that.setModel(new sap.ui.model.json.JSONModel(), sName).getModel(sName);
         if (that.onPropertyChange) oModel.attachPropertyChange(that.onPropertyChange, that);
-      }
+      }*/
       
-      oModel.loadData(
+      /*oModel.loadData(
         that.getOwnerComponent().getManifestEntry('/sap.app/dataSources/api/uri') +
         (sEntity ? sEntity : sName) +
         (sId ? '/' + sId : '') +
         (oFilter ? '?filter=' + JSON.stringify(oFilter) : ''),
         '', false, 'GET', false, false,
-      );
+      );*/
     },
 
     fnLoadInstance: function() {
-      let that = this;
-      that.fnModelLoadData(that.aConfigModels[0]);
+      //let that = this;
+      //that.fnModelLoadData(that.aConfigModels[0]);
     },
 
     fnSaveInstance: function() {
-      let that = this;
+      /*let that = this;
       let oConfig = that.aConfigModels[0];
 
       //полуить клон
       let oData = _.cloneDeep(that.getModel(oConfig.name).getData());
-      Object.assign(oData, {edit: false, draft: ''});
+      Object.assign(oData, {edit: false, draft: ''});*/
 
       //удалить все связи
-      if (oConfig.filter && oConfig.filter.include) {
+      /*if (oConfig.filter && oConfig.filter.include) {
         oConfig.filter.include.map(e => e.relation).forEach(r => delete oData[r]);
       }
 
@@ -115,11 +104,11 @@ sap.ui.define([
         contentType: 'application/json',
       }).done(function(data) {
         that.fnLoadInstance();
-      });
+      });*/
     },
 
     fnPatchEdit: function(bEdit) {
-      let that = this;
+      /*let that = this;
       let oConfig = that.aConfigModels[0];
       $.ajax({
         url: that.getApiUri() + oConfig.entity + '/' + oConfig.id,
@@ -128,12 +117,12 @@ sap.ui.define([
         contentType: 'application/json',
       }).done(function(bEdit) {
         that.fnLoadInstance();
-      });
+      });*/
     },
 
     //должно выполняться в фоновом режиме постоянно после каждого изменения
     fnSaveDraft: function() {
-      let that = this;
+      /*let that = this;
       let oModel = that.getModel('Instance');
       let oData = oModel.getData();
       let oDraft = {
@@ -146,19 +135,19 @@ sap.ui.define([
         method: 'POST',
         data: JSON.stringify(oDraft),
         contentType: 'application/json',
-      });
+      });*/
     },
 
     //работает
     fnLoadDraft: function() {
-      let that = this;
+      /*let that = this;
       $.ajax({
         url: that.getApiUri() + that.sInstanceModelName + '/' + that.sInstanceId + '/draft',
         method: 'GET',
         contentType: 'application/json',
       }).done(function(data) {
         that.getModel('Instance').setJSON(data.instance);
-      });
+      });*/
     },
 	});
 });

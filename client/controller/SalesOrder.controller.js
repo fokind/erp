@@ -8,54 +8,20 @@ sap.ui.define([
 
     onInit: function() {
       let that = this;
-      //that.sInstanceModelName = 'SalesOrders';
-      that.aConfigModels = [
-        {
-          name: 'Instance',
-          entity: 'SalesOrders',
-          filter: {include: [{
-            relation: 'Rows',
-            scope: {where: {deleted: false}} //не забыть удалить relation при сохранении
-          }]}
-        },
-        {
-          name: 'Employees',
-          filter: {where: {deleted: false}}
-        },
-      ];
+      that.getRouter().getRoute('sales-order').attachPatternMatched(that._onRoutePatternMatched, that);
+    },
 
-      
-      
-      /*that.oInstanceFilter = {include: {
-        relation: 'Rows',
-        scope: {where: {deleted: false}},//не забыть удалить relation при сохранении
-      }};
-
-      that.aRelationNames = ['Rows'];*/
-      //строка редактируется в диалоге
-      //при закрытии диалога с сохранением обязательно адейтится соответствующая строчка
-      //при роутинге назад должна апдейтиться соответствующая строчка, возможно еще в момент сохранения
-
-      /*that.aModels = [
-        {name: 'Employees'},
-      ];*/
-
-      let m = this.getOwnerComponent().getModel('SalesOrders');
-      console.log(m);//прибиндить из главного списка
-
-
-
-      var oRouter = that.getRouter();
-      oRouter.attachRoutePatternMatched(that._onRouteMatched, that);
+    _onRoutePatternMatched: function(oEvent) {
+      this.getView().bindElement('/SalesOrders(\'' + oEvent.getParameter('arguments').id + '\')');
     },
 
     onPropertyChange: function(oEvent) {
-      let aParameters = oEvent.getParameters();
-      let oContext = oEvent.getParameter('context');
-      console.log(oContext);
-      console.log(aParameters);
-      if ((oContext && /^\/Rows\//.exec(oContext.sPath)) || (aParameters && /^\/Rows\//.exec(aParameters.path))) {
-        console.log(oContext);
+      /*let aParameters = oEvent.getParameters();
+      let oContext = oEvent.getParameter('context');*/
+      //console.log(oContext);
+      //console.log(aParameters);
+      /*if ((oContext && /^\/Rows\//.exec(oContext.sPath)) || (aParameters && /^\/Rows\//.exec(aParameters.path))) {
+        //console.log(oContext);
         
         let that = this;
         let oModel = that.getModel('Instance');
@@ -63,24 +29,24 @@ sap.ui.define([
           !isNaN(e.quantity) &&
           !isNaN(e.unitPrice));
 
-        console.log(aRows);
+        //console.log(aRows);
           
         let fTotal = aRows.length == 0 ? 0 : _.sum(aRows
           .map(e => e.quantity * e.unitPrice));
 
         oModel.setProperty('/total', fTotal);
-      };
+      };*/
     },
 
     onCancelActionPress: function(oControlEvent) {
-      this.fnPatchEdit(false);
+      //this.fnPatchEdit(false);
     },
     
 
     onRowDetailPress: function(oControlEvent) {
       //при открытии диалога передавать клон связанного элемента
       //при закрытии копировать клон в модель сущности
-      let that = this;
+      //let that = this;
       //let oContext = oControlEvent.getSource().getBindingContext('Instance');
       
       //let sPath = oContext.getPath();
@@ -91,7 +57,7 @@ sap.ui.define([
       //const sModelName = 'Instance';//TODO заменить на модель по умолчанию
       //заблокировать для остальных пользователей (весь заказ, включая дочерние объекты должен считаться заблокированным)
 
-      var oView = that.getView();
+      /*var oView = that.getView();
       let oContext = oControlEvent.getSource().getBindingContext('Instance');
       var oDialog = oView.byId('salesOrderRowDialog');
 
@@ -102,21 +68,21 @@ sap.ui.define([
 
       oDialog.bindElement({model: 'Instance', path: oContext.sPath});
       oDialog.addStyleClass('sapUiSizeCompact');
-      oDialog.open();
+      oDialog.open();*/
     },
 
     onSaveActionPress: function(oControlEvent) {
       //сохранить строки
-      this.fnRowsSave();
+      //this.fnRowsSave();
       //сохранить сам элемент
-      let oModel = this.getModel('Instance');
+      /*let oModel = this.getModel('Instance');
       oModel.setProperty('/deleted', false);
-      this.fnSaveInstance();
+      this.fnSaveInstance();*/
     },
 
     onDeleteRow: function(oControlEvent) {
       //пометить как удаленный
-      let o = oControlEvent.getParameters('listItem');
+      /*let o = oControlEvent.getParameters('listItem');
       let oBindingContext = o.listItem.getBindingContext('Instance');
       let sPath = oBindingContext.sPath;
       let oModel = oBindingContext.oModel;
@@ -129,12 +95,12 @@ sap.ui.define([
       oModel.firePropertyChange({
         path: sPath + '/deleted',
         value: true
-      });
+      });*/
       //oModel.refresh();
     },
 
 		fnRowsSave: function() {
-      let that = this;
+      /*let that = this;
       let aRows = that.getModel('Instance').getProperty('/Rows');
       let sParentId = that.aConfigModels[0].id;
       aRows.forEach(function(oRow) {
@@ -145,12 +111,12 @@ sap.ui.define([
           data: JSON.stringify(oRow),
           contentType: 'application/json'
         });
-      });
+      });*/
 
     },
 
     fnRowOpen: function(oRow) {
-      let that = this;
+      //let that = this;
       //let oContext = oControlEvent.getSource().getBindingContext('Instance');
       
       //let sPath = oContext.getPath();
@@ -161,34 +127,34 @@ sap.ui.define([
       //const sModelName = 'Instance';//TODO заменить на модель по умолчанию
       //заблокировать для остальных пользователей (весь заказ, включая дочерние объекты должен считаться заблокированным)
 
-      var oView = that.getView();
+      /*var oView = that.getView();
       var oDialog = oView.byId('salesOrderRowDialog');
 
       if (!oDialog) {
         oDialog = sap.ui.xmlfragment(oView.getId(), 'tms.basic.view.SalesOrderRowDialog', that);
         oView.addDependent(oDialog);
-      }
+      }*/
 
       //let oRow = that.getModel(sModelName).getProperty(sPath);
       //let oData = _.cloneDeep(oRow);
       
       //oDialog.setModel(new sap.ui.model.json.JSONModel(oData), 'Row');
       //oDialog.setModel(oContext.oModel, 'Instance');
-      let aRows = this.getModel('Instance').getProperty('/Rows');
+      /*let aRows = this.getModel('Instance').getProperty('/Rows');
       let sPath = '/Rows/' + aRows.indexOf(oRow);
 
       oDialog.bindElement({model: 'Instance', path: sPath});
       oDialog.addStyleClass('sapUiSizeCompact');
-      oDialog.open();
+      oDialog.open();*/
     },
 
     onRowAccept: function(oControlEvent) {
-      let oDialog = oControlEvent.getSource().oParent;
-      oDialog.close();
+      //let oDialog = oControlEvent.getSource().oParent;
+      //oDialog.close();
     },
 
 		onRowSave: function(oControlEvent) {
-      let that = this;
+      /*let that = this;
       const sRelationName = 'Rows';
       let oBindingContext = oControlEvent.getSource().oParent.getBindingContext('Instance');
       let sPath = oBindingContext.sPath;
@@ -204,7 +170,7 @@ sap.ui.define([
       });*/
       
       // syncPost не работает из-за Request Method = PUT
-      $.ajax({
+      /*$.ajax({
         url: that.getApiUri() +
           that.sInstanceModelName + '/' + that.sInstanceId + '/' +
           sRelationName + '/' + oModel.getProperty(sPath + '/id'),
@@ -218,7 +184,7 @@ sap.ui.define([
         sap.m.MessageToast.show(that.getResourceBundle().getText('saveError'));
       }).always(function(data) {
         that.getView().byId('salesOrderRowDialog').close();
-      });
+      });*/
 
     },
 
@@ -238,7 +204,7 @@ sap.ui.define([
         aRows.splice(iIndex, 1);
         oModel.refresh();
       }*/
-      oControlEvent.getSource().oParent.close();
+      //oControlEvent.getSource().oParent.close();
       //this.getView().byId('salesOrderRowDialog').close();
     },
     
@@ -247,16 +213,16 @@ sap.ui.define([
     },
 
     formatterCalculateTotal: function(aRows) {
-      console.log(aRows);
+      //console.log(aRows);
       return 0;
     },
 
     onEditActionPress: function() {
-      this.fnPatchEdit(true);
+      //this.fnPatchEdit(true);
     },
 
     onAddActionPress: function() {
-      let that = this;
+      /*let that = this;
 
       let oModel = that.getModel('Instance');
       let aRows = oModel.getProperty('/Rows');
@@ -275,12 +241,12 @@ sap.ui.define([
         aRows.push(data);
         oModel.refresh();
         that.fnRowOpen(data);
-      });
+      });*/
     },
 
     onAddActionPress2: function(oControlEvent) {
       //создать в базе данных, полученный объект вывести
-      let that = this;
+      /*let that = this;
       let oModel = that.getModel('Instance');
       let aRows = oModel.getProperty('/Rows');
 
@@ -297,12 +263,12 @@ sap.ui.define([
       }).done(function(data) {
         aRows.push(data);
         that.fnRowOpen('/Rows/' + aRows.indexOf(data), true);
-      });
+      });*/
     },
 
     onDeleteActionPress: function(oControlEvent) {
       //получить выбранные элементы
-      let that = this;
+      /*let that = this;
       const sRelationName = 'Rows';
       let aSelectedItems = that.getView().byId('salesOrderRows').getSelectedItems();
       aSelectedItems.forEach(function(item) {
@@ -329,7 +295,7 @@ sap.ui.define([
           aRows.splice(iIndex, 1);
           oModel.refresh();
         });
-      });
+      });*/
 
       
     },

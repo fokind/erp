@@ -7,44 +7,28 @@ sap.ui.define([
   return Controller.extend('tms.basic.controller.SalesOrders', {
     onInit: function() {
       let that = this;
-      that.aConfigModels = [{
-        name: 'SalesOrders',
-        filter: {where: {deleted: false}},
-      }];
-
+      that.aConfigModels = [];
       var oRouter = that.getRouter();
       oRouter.attachRoutePatternMatched(that._onRouteMatched, that);
     },
 
     onItemPress: function(oEvent) {
       let that = this;
-      let oBindingContext = oEvent.getSource().getBindingContext('SalesOrders');
-      let o = oBindingContext.oModel.oData[oBindingContext.getPath().substr(1)];
+      let oBindingContext = oEvent.getSource().getBindingContext();
+      let sPath = oBindingContext.sPath;
+      let o = oBindingContext.getObject(sPath);
       let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
 
       oRouter.navTo('sales-order', {
-        id: o.id,
+        id: o._id,
       });
     },
 
     onDeletePress: function(oEvent) {
+      let that = this;
+      let oBindingContext = oEvent.getParameter('listItem').getBindingContext();
+      oBindingContext.delete().then(() => oBindingContext.getBinding().refresh());
       
-      let oView = this.getView().byId('salesOrderRows');
-
-      //должна быть проверка на возможность удаления
-      //всё это должно происходить в режиме редактирования
-      //запрашивать подтверждение на удаление
-      //оставлять возможность восстановить
-
-      // calculating the index of the selected list item
-      let oBindingContexts = oEvent.mParameters.listItem.oBindingContexts.SalesOrders;
-      // Removing the selected list item from the model based on the index
-      // calculated
-      var oModel = oBindingContexts.oModel;
-      var aData = oModel.getData();
-      var o = oModel.getProperty(oBindingContexts.sPath);
-
-      this.fnDeleteInstance(o.id);
     },
 
 		onCloseDialog: function() {
@@ -53,7 +37,19 @@ sap.ui.define([
 		},
 
     onAddActionPress: function(oControlEvent) {
-      this.fnAddInstance();
+      let that = this;
+      let oBinding = that.byId("salesOrderRows").getBinding("items");
+      let oContext = oBinding.create({
+        "name": "",
+        "total" : 0
+      });
+
+      oContext.created().then(() => {
+        let sId = oContext.getProperty('_id');
+        oBinding.refresh();
+        sap.ui.core.UIComponent.getRouterFor(that).navTo('sales-order', {id: sId});
+      });
+
     },
 
     navTo: function(oData) {

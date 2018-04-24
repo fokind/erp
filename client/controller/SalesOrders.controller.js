@@ -38,6 +38,7 @@ sap.ui.define([
 
     onAddActionPress: function(oControlEvent) {
       let that = this;
+      console.log(1);
       let oBinding = that.byId("salesOrderRows").getBinding("items");
       let oContext = oBinding.create({
         "name": "",

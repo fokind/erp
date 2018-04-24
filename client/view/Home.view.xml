@@ -1,0 +1,56 @@
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns:uxap="sap.uxap"
+  xmlns:layout="sap.ui.layout"
+  xmlns="sap.m"
+  xmlns:s="sap.m.semantic"
+  xmlns:customdata="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+  controllerName="tms.basic.controller.Home"
+  height="100%">
+  <s:MasterPage id="home" title="{i18n>title}">
+    <s:content>
+      <uxap:ObjectPageLayout>
+        <uxap:sections>
+          <uxap:ObjectPageSection>
+            <uxap:subSections>
+              <uxap:ObjectPageSubSection title="{i18n>commerce}">
+                <uxap:blocks>
+                  <layout:BlockLayout>
+                    <layout:content>
+                      <layout:BlockLayoutRow>
+                        <layout:content>
+                          <layout:BlockLayoutCell>
+                            <layout:content>
+                              <GenericTile class="sapUiTinyMargin tileLayout" header="{i18n>salesOrders}" press="onPress" customdata:target="sales-orders"/>
+                            </layout:content>
+                          </layout:BlockLayoutCell>
+                        </layout:content>
+                      </layout:BlockLayoutRow>
+                    </layout:content>
+                  </layout:BlockLayout>
+                </uxap:blocks>
+              </uxap:ObjectPageSubSection>
+              <uxap:ObjectPageSubSection title="{i18n>stuff}">
+                <uxap:blocks>
+                  <layout:BlockLayout>
+                    <layout:content>
+                      <layout:BlockLayoutRow>
+                        <layout:content>
+                          <layout:BlockLayoutCell>
+                            <layout:content>
+                              <GenericTile class="sapUiTinyMargin tileLayout" header="{i18n>employees}" press="onPress" customdata:target="employees"/>
+                            </layout:content>
+                          </layout:BlockLayoutCell>
+                        </layout:content>
+                      </layout:BlockLayoutRow>
+                    </layout:content>
+                  </layout:BlockLayout>
+                </uxap:blocks>
+              </uxap:ObjectPageSubSection>
+            </uxap:subSections>
+          </uxap:ObjectPageSection>
+        </uxap:sections>
+      </uxap:ObjectPageLayout>
+    </s:content>
+  </s:MasterPage>
+</mvc:View>

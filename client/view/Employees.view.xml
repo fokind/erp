@@ -1,0 +1,20 @@
+<mvc:View
+	controllerName="tms.basic.controller.Employees"
+	xmlns:mvc="sap.ui.core.mvc"
+  xmlns:s="sap.m.semantic"
+	displayBlock="true"
+	xmlns="sap.m">
+  <s:MasterPage id="employees" title="{i18n>title}" showNavButton="true" navButtonPress="onNavBack">
+    <s:content>
+      <List headerText="{i18n>employees}" items="{path:'Employees>/'}" mode="MultiSelect">
+        <StandardListItem title="{Employees>name}" press="onPress" type="Navigation" />
+      </List>
+    </s:content>
+    <s:addAction>
+      <s:AddAction enabled="true" press="onAddActionPress"/>
+    </s:addAction>
+    <s:deleteAction>
+      <s:DeleteAction enabled="true" press="onDeleteActionPress"/>
+    </s:deleteAction>
+  </s:MasterPage>
+</mvc:View>

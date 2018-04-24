@@ -1,0 +1,28 @@
+<core:FragmentDefinition
+   xmlns="sap.m"
+   xmlns:f="sap.ui.layout.form"
+   xmlns:core="sap.ui.core" >
+   <Dialog title="{i18n>salesOrderRow}"
+      id="salesOrderRowDialog">
+      <content>
+        <f:SimpleForm
+          editable="true"
+          layout="ResponsiveGridLayout"
+          class="editableForm">
+          <f:content>
+            <Label text="{i18n>name}"/>
+            <Input value="{Instance>productName}"/>
+            <Label text="{i18n>qty}"/>
+            <Input value="{Instance>quantity}"/>
+            <Label text="{i18n>price}"/>
+            <Input value="{Instance>unitPrice}"/>
+          </f:content>
+        </f:SimpleForm>
+      </content>
+      <beginButton>
+        <Button
+          text="{i18n>ok}"
+          press="onRowAccept"/>
+      </beginButton>
+   </Dialog>
+</core:FragmentDefinition>

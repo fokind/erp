@@ -11,9 +11,12 @@
 		"description": "{{appDescription}}",
 		"resources": "resources.json",
 		"dataSources": {
-			"api": {
-				"uri": "http://localhost:3000/api/",
-				"type": "JSON"
+			"default": {
+				"uri": "http://localhost:3001/odata/",
+				"type": "OData",
+				"settings": {
+					"odataVersion": "4.0"
+				}
 			}
 		}
 	},
@@ -53,11 +56,13 @@
 					"bundleName": "tms.basic.i18n.i18n"
 				}
 			},
-			"SalesOrders": {
-				"type": "sap.ui.model.json.JSONModel"
-			},
-			"Employees": {
-				"type": "sap.ui.model.json.JSONModel"
+			"": {
+				"dataSource": "default",
+				"settings": {
+					"autoExpandSelect": true,
+					"groupId": "$direct",
+					"synchronizationMode": "None"
+				}
 			}
 		},
 		"resources": {

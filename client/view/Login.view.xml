@@ -1,0 +1,26 @@
+<mvc:View
+	controllerName="tms.basic.controller.Login"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:f="sap.ui.layout.form"
+  xmlns:s="sap.m.semantic"
+	displayBlock="true"
+	xmlns="sap.m">
+  <s:DetailPage id="login" title="{i18n>title}" showNavButton="true" navButtonPress="onNavBack">
+    <s:content>
+      <VBox class="sapUiContentPadding" alignItems="Center" justifyContent="Center" alignContent="Center" fitContainer="true">
+        <f:SimpleForm id="authForm"
+          editable="true"
+          layout="ResponsiveGridLayout"
+          title="{i18n>authFormTitle}"
+          class="editableForm">
+          <f:content>
+            <Input id="username" placeholder="{i18n>authFormUsername}" value="{/username}"></Input>
+            <Input id="password" placeholder="{i18n>authFormPassword}" type="Password" value="{/password}"></Input>
+            <Button text="{i18n>toLogin}" type="Emphasized" press="onPressLogin"></Button>
+            <Button text="{i18n>toLogout}" press="onPressLogout"></Button>
+          </f:content>
+        </f:SimpleForm>
+      </VBox>
+    </s:content>
+  </s:DetailPage>
+</mvc:View>

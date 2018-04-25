@@ -60,10 +60,7 @@
                   </m:Toolbar>
                 </m:headerToolbar>
                 <m:columns>
-                  <m:Column>
-                    <m:Text text="{i18n>id}"/>
-                  </m:Column>
-                  <m:Column>
+                  <m:Column width="50%">
                     <m:Text text="{i18n>name}"/>
                   </m:Column>
                   <m:Column>
@@ -81,8 +78,7 @@
                     type="Active"
                     press="onItemPress">
                     <m:cells>
-                      <m:ObjectIdentifier title="{_id}"/>
-                      <m:Text text="{name}"/>
+                      <m:ObjectIdentifier title="{name}" text="{_id}"/>
                       <m:ObjectNumber number="{quantity}" unit="шт."/>
                       <m:ObjectNumber number="{price}" unit="р."/>
                       <m:ObjectNumber number="{total}" unit="р."/>

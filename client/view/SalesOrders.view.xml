@@ -38,7 +38,7 @@
                 >
                 <m:headerToolbar>
                   <m:Toolbar>
-                    <m:Title text="Заказы продаж"/>
+                    <m:Title text="{i18n>salesOrders}"/>
                     <m:ToolbarSpacer />
                     <m:Button icon="sap-icon://add" press="onAddActionPress"/>
                   </m:Toolbar>

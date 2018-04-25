@@ -11,11 +11,11 @@
           class="editableForm">
           <f:content>
             <Label text="{i18n>name}"/>
-            <Input value="{Instance>productName}"/>
+            <Input value="{/name}"/>
             <Label text="{i18n>qty}"/>
-            <Input value="{Instance>quantity}"/>
+            <Input value="{/quantity}"/>
             <Label text="{i18n>price}"/>
-            <Input value="{Instance>unitPrice}"/>
+            <Input value="{/price}"/>
           </f:content>
         </f:SimpleForm>
       </content>

@@ -37,6 +37,61 @@
               </f:SimpleForm>
             </blocks>
           </ObjectPageSubSection>
+          <ObjectPageSubSection title="{i18n>rows}">
+            <blocks>
+              <m:Table
+                id="salesOrderRows"
+                growing="true"
+                growingThreshold="100"
+                items="{
+                  path: 'Rows',
+                  parameters: {
+                    $count: true
+                  }
+                }"
+                delete="onDeletePress"
+                mode="Delete"
+                >
+                <m:headerToolbar>
+                  <m:Toolbar>
+                    <m:Title text="{i18n>rows}"/>
+                    <m:ToolbarSpacer />
+                    <m:Button icon="sap-icon://add" press="onAddActionPress"/>
+                  </m:Toolbar>
+                </m:headerToolbar>
+                <m:columns>
+                  <m:Column>
+                    <m:Text text="{i18n>id}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>name}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>qty}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>price}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>total}"/>
+                  </m:Column>
+                </m:columns>
+                <m:items>
+                  <m:ColumnListItem
+                    type="Active"
+                    press="onItemPress">
+                    <m:cells>
+                      <m:ObjectIdentifier title="{_id}"/>
+                      <m:Text text="{name}"/>
+                      <m:ObjectNumber number="{quantity}" unit="шт."/>
+                      <m:ObjectNumber number="{price}" unit="р."/>
+                      <m:ObjectNumber number="{total}" unit="р."/>
+                    </m:cells>
+                  </m:ColumnListItem>
+                </m:items>
+              </m:Table>
+            </blocks>
+          </ObjectPageSubSection>
         </subSections>
       </ObjectPageSection>
     </sections>

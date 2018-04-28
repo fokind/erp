@@ -24,7 +24,7 @@
           <ObjectPageSubSection>
             <blocks>
               <m:Table
-                id="salesOrderRows"
+                id="salesOrders"
                 growing="true"
                 growingThreshold="10"
                 items="{
@@ -45,9 +45,6 @@
                 </m:headerToolbar>
                 <m:columns>
                   <m:Column>
-                    <m:Text text="{i18n>id}"/>
-                  </m:Column>
-                  <m:Column>
                     <m:Text text="{i18n>name}"/>
                   </m:Column>
                   <m:Column>
@@ -59,7 +56,6 @@
                     type="Active"
                     press="onItemPress">
                     <m:cells>
-                      <m:ObjectIdentifier title="{_id}"/>
                       <m:Text text="{name}"/>
                       <m:ObjectNumber number="{total}" unit="р."/>
                     </m:cells>

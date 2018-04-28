@@ -3,16 +3,59 @@
 
 sap.ui.define([
   'tms/basic/controller/InstanceRelationsController',
-], function(Controller) {
+  'sap/ui/model/json/JSONModel',
+  'sap/ui/model/Filter',
+  'sap/ui/model/FilterOperator'
+], function(Controller, JSONModel, Filter, FilterOperator) {
   return Controller.extend('tms.basic.controller.SalesOrder', {
 
     onInit: function() {
       let that = this;
+      that.setModel(new JSONModel(), 'view');
       that.getRouter().getRoute('sales-order').attachPatternMatched(that._onRoutePatternMatched, that);
     },
 
     _onRoutePatternMatched: function(oEvent) {
-      this.getView().bindElement('/SalesOrders(\'' + oEvent.getParameter('arguments').id + '\')');
+      let that = this;
+      //that.byId("salesOrderRows").bindElement({path: '/SalesOrderRows', parameters: {$count: true}});
+      
+      let oViewModel = that.getModel('view');
+      let sId = oEvent.getParameter('arguments').id;
+      oViewModel.setProperty('/id', sId);
+
+      //фильтр parentId = sId
+      
+      that.getView().byId("salesOrderRows").bindItems({
+        path: '/SalesOrderRows',
+        filters: [
+          new Filter({
+            path: 'parentId',
+            operator: FilterOperator.EQ,
+            value1: sId
+          })
+        ],
+        parameters: {
+          $count: true
+        },
+        template: new sap.m.ColumnListItem({
+          type: sap.m.ListType.Active,
+          press: ".onItemPress",
+          cells: [
+            new sap.m.ObjectIdentifier({title: "{name}"}),
+            new sap.m.ObjectIdentifier({title: "{parentId}"}),
+            new sap.m.ObjectNumber({number: "{quantity}", unit: "шт."}),
+            new sap.m.ObjectNumber({number: "{price}", unit: "р."}),
+            new sap.m.ObjectNumber({number: "{total}", unit: "р."})
+          ]
+        })
+      });   
+      that.getView().bindElement('/SalesOrders(\'' + sId + '\')');
+
+
+
+      //отдельно контекст для строк
+      
+      
     },
 
     onPropertyChange: function(oEvent) {
@@ -37,11 +80,6 @@ sap.ui.define([
         oModel.setProperty('/total', fTotal);
       };*/
     },
-
-    onCancelActionPress: function(oControlEvent) {
-      //this.fnPatchEdit(false);
-    },
-    
 
     onRowDetailPress: function(oControlEvent) {
       //при открытии диалога передавать клон связанного элемента
@@ -71,48 +109,30 @@ sap.ui.define([
       oDialog.open();*/
     },
 
-    onSaveActionPress: function(oControlEvent) {
-      //сохранить строки
-      //this.fnRowsSave();
-      //сохранить сам элемент
-      /*let oModel = this.getModel('Instance');
-      oModel.setProperty('/deleted', false);
-      this.fnSaveInstance();*/
-    },
+    onDeleteRowPress: function(oControlEvent) {
+      //console.log(oControlEvent);
+      let that = this;
+      let oBindingContext = oControlEvent.getParameter('listItem').getBindingContext();
+      let iIndex = oBindingContext.iIndex;
+      //console.log(oBindingContext.sPath);
 
-    onDeleteRow: function(oControlEvent) {
-      //пометить как удаленный
-      /*let o = oControlEvent.getParameters('listItem');
-      let oBindingContext = o.listItem.getBindingContext('Instance');
-      let sPath = oBindingContext.sPath;
-      let oModel = oBindingContext.oModel;
-      //let o1 = oModel.getObject(sPath);
-      //o1.deleted = true;
-
-      //плохо работает нотификация вложенных объектов
+      let oModel = that.getOwnerComponent().getModel();
+      let o = oBindingContext.getObject();//TODO теперь нужно получить соответствующий контекст в списке, который потом удалить!!!!!!!!!!!!!
+      //let oContext = oModel.createBindingContext('/SalesOrderRows(' + o._id + ')', oBindingContext);
       
-      oModel.setProperty(sPath + '/deleted', true);
-      oModel.firePropertyChange({
-        path: sPath + '/deleted',
-        value: true
-      });*/
-      //oModel.refresh();
-    },
+      let oDataListBinding = oModel.bindList('/SalesOrderRows');
+      let a = oDataListBinding.getContexts();
+      let oDataContextBinding = oModel.bindContext('/SalesOrderRows(' + o._id + ')');
+      let oContext = oDataContextBinding.oElementContext;
 
-		fnRowsSave: function() {
-      /*let that = this;
-      let aRows = that.getModel('Instance').getProperty('/Rows');
-      let sParentId = that.aConfigModels[0].id;
-      aRows.forEach(function(oRow) {
-        oRow.parentId = sParentId;
-        $.ajax({
-          url: that.getApiUri() + 'SalesOrderRows/replaceOrCreate',
-          method: 'POST',
-          data: JSON.stringify(oRow),
-          contentType: 'application/json'
-        });
-      });*/
+      //console.log(oDataListBinding);
+      //console.log(a);
+      console.log(oContext);
+      oContext.delete();
+      //let aContexts = oDataListBinding.getContexts();
+      //console.log(aContexts);
 
+      //oBindingContext.delete().then(() => { console.log(oBindingContext); });
     },
 
     fnRowOpen: function(oRow) {
@@ -148,67 +168,7 @@ sap.ui.define([
       oDialog.open();*/
     },
 
-    onRowAccept: function(oControlEvent) {
-      //let oDialog = oControlEvent.getSource().oParent;
-      //oDialog.close();
-    },
-
-		onRowSave: function(oControlEvent) {
-      /*let that = this;
-      const sRelationName = 'Rows';
-      let oBindingContext = oControlEvent.getSource().oParent.getBindingContext('Instance');
-      let sPath = oBindingContext.sPath;
-      let oModel = oBindingContext.oModel;
-      let oData = oModel.getProperty(sPath);
-
-      // для одного отношения с одним вложенным отношением по простому
-      //console.log(new sap.ui.model.json.JSONModel(that.oInstanceFilter));
-      //console.log(that.oInstanceFilter.include.scope.include);
-
-      /*include.forEach(function(relation) {
-        delete oInstanceData[relation.relation];
-      });*/
-      
-      // syncPost не работает из-за Request Method = PUT
-      /*$.ajax({
-        url: that.getApiUri() +
-          that.sInstanceModelName + '/' + that.sInstanceId + '/' +
-          sRelationName + '/' + oModel.getProperty(sPath + '/id'),
-        method: 'PUT',
-        data: JSON.stringify(oInstanceData),
-        contentType: 'application/json',
-      }).done(function(data) {
-        oModel.refresh();
-        sap.m.MessageToast.show(that.getResourceBundle().getText('saveSuccess'));
-      }).fail(function(data) {
-        sap.m.MessageToast.show(that.getResourceBundle().getText('saveError'));
-      }).always(function(data) {
-        that.getView().byId('salesOrderRowDialog').close();
-      });*/
-
-    },
-
-    onRowCancel: function(oControlEvent) {
-      /*let that = this;
-      const sRelationName = 'Rows';
-      let oBindingContext = oControlEvent.getSource().oParent.getBindingContext('Instance');
-      let sPath = oBindingContext.sPath;
-      let oModel = oBindingContext.oModel;
-
-      if (that.oRowBackup) {
-        oModel.setProperty(sPath, that.oRowBackup);
-      } else {
-        let aRows = oModel.getProperty('/Rows');
-        let oRow = oModel.getProperty(sPath);
-        let iIndex = aRows.indexOf(oRow);
-        aRows.splice(iIndex, 1);
-        oModel.refresh();
-      }*/
-      //oControlEvent.getSource().oParent.close();
-      //this.getView().byId('salesOrderRowDialog').close();
-    },
-    
-    formatterCalculateRowTotal: function(fUnitPrice, fQuantity) {
+		formatterCalculateRowTotal: function(fUnitPrice, fQuantity) {
       return (fUnitPrice === undefined || fQuantity === undefined) ? 0 : fUnitPrice * fQuantity;
     },
 
@@ -217,87 +177,28 @@ sap.ui.define([
       return 0;
     },
 
-    onEditActionPress: function() {
-      //this.fnPatchEdit(true);
-    },
+    onAddActionPress: function(oControlEvent) {
+      let that = this;
+      let oModel = that.getOwnerComponent().getModel();
+      let oDataListBinding = oModel.bindList('/SalesOrderRows');
+      let sParentId = that.getModel('view').getProperty('/id');
 
-    onAddActionPress: function() {
-      /*let that = this;
+      let oContext = oDataListBinding.create({
+        "name": "",
+        "quantity": 0,
+        "price": 0,
+        "total": 0,
+        "parentId": sParentId
+      });
 
-      let oModel = that.getModel('Instance');
-      let aRows = oModel.getProperty('/Rows');
-
-      let oConfig = that.aConfigModels[0];
-      let sEntity = oConfig.entity;
-      let sId = oConfig.id;
-      let sRelation = oConfig.filter.include[0].relation;
-
-      $.ajax({
-        url: that.getApiUri() + sEntity + '/' + sId + '/' + sRelation,
-        method: 'POST',
-        contentType: 'application/json',
-      }).done(function(data) {
-        data.deleted = false;
-        aRows.push(data);
-        oModel.refresh();
-        that.fnRowOpen(data);
-      });*/
-    },
-
-    onAddActionPress2: function(oControlEvent) {
-      //создать в базе данных, полученный объект вывести
-      /*let that = this;
-      let oModel = that.getModel('Instance');
-      let aRows = oModel.getProperty('/Rows');
-
-      let oConfig = that.aConfigModels[0];
-      let sEntity = oConfig.entity;
-      let sId = oConfig.id;
-      let sRelation = oConfig.filter.include[0].relation;
-
-      $.ajax({
-        url: that.getApiUri() + sEntity + '/' + sId + '/' + sRelation,
-        method: 'POST',
-        data: JSON.stringify({deleted: false}),
-        contentType: 'application/json',
-      }).done(function(data) {
-        aRows.push(data);
-        that.fnRowOpen('/Rows/' + aRows.indexOf(data), true);
-      });*/
-    },
-
-    onDeleteActionPress: function(oControlEvent) {
-      //получить выбранные элементы
-      /*let that = this;
-      const sRelationName = 'Rows';
-      let aSelectedItems = that.getView().byId('salesOrderRows').getSelectedItems();
-      aSelectedItems.forEach(function(item) {
-        let oBindingContext = item.getBindingContext('Instance');
-        let sPath = oBindingContext.sPath;
-        let oModel = oBindingContext.oModel;
-        let oData = oModel.getProperty(sPath);
-        oModel.setProperty(sPath + '/deleted', true);
-        var oInstanceData = _.cloneDeep(oData);
-        that.aRowsRelationNames.forEach(function(relationName) {
-          delete oInstanceData[relationName];
-        });
-    
-        $.ajax({
-          url: that.getApiUri() +
-            that.sInstanceModelName + '/' + that.sInstanceId + '/' +
-            sRelationName + '/' + oModel.getProperty(sPath + '/id'),
-          method: 'PUT',
-          data: JSON.stringify(oInstanceData),
-          contentType: 'application/json',
-        }).done(function(data) {
-          let aRows = oModel.getData().Rows;
-          let iIndex = aRows.indexOf(oData);
-          aRows.splice(iIndex, 1);
-          oModel.refresh();
-        });
-      });*/
-
+      //метод рефреш необходимо вызывать у родительского абсолютного биндинга
       
+
+      oContext.created().then(() => {
+        
+        oModel.refresh();
+        //открыть диалог
+      });      
     },
   });
 });

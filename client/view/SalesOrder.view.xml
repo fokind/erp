@@ -9,7 +9,7 @@
 	xmlns:m="sap.m">
   <ObjectPageLayout id="salesOrder" useIconTabBar="true" showHeaderContent="true" showTitleInHeaderContent="true">
     <headerTitle>
-      <ObjectPageHeader objectTitle="{_id}" isObjectTitleAlwaysVisible="false" >
+      <ObjectPageHeader objectTitle="{view>/id}" isObjectTitleAlwaysVisible="false" >
         <actions>
 					<ObjectPageHeaderActionButton icon="sap-icon://account" enabled="false"/>
         </actions>
@@ -29,63 +29,58 @@
         <subSections>
           <ObjectPageSubSection title="{i18n>common}">
             <blocks>
-              <f:SimpleForm editable="true" layout="ResponsiveGridLayout ">
-                <f:content>
-                  <m:Label text="{i18n>name}"/>
-                  <m:Input value="{name}" id="n"/>
-                </f:content>
-              </f:SimpleForm>
-            </blocks>
-          </ObjectPageSubSection>
-          <ObjectPageSubSection title="{i18n>rows}">
-            <blocks>
-              <m:Table
-                id="salesOrderRows"
-                growing="true"
-                growingThreshold="100"
-                items="{
-                  path: 'Rows',
-                  parameters: {
-                    $count: true
-                  }
-                }"
-                delete="onDeletePress"
-                mode="Delete"
-                >
-                <m:headerToolbar>
-                  <m:Toolbar>
-                    <m:Title text="{i18n>rows}"/>
-                    <m:ToolbarSpacer />
-                    <m:Button icon="sap-icon://add" press="onAddActionPress"/>
-                  </m:Toolbar>
-                </m:headerToolbar>
-                <m:columns>
-                  <m:Column width="50%">
-                    <m:Text text="{i18n>name}"/>
-                  </m:Column>
-                  <m:Column>
-                    <m:Text text="{i18n>qty}"/>
-                  </m:Column>
-                  <m:Column>
-                    <m:Text text="{i18n>price}"/>
-                  </m:Column>
-                  <m:Column>
-                    <m:Text text="{i18n>total}"/>
-                  </m:Column>
-                </m:columns>
-                <m:items>
-                  <m:ColumnListItem
-                    type="Active"
-                    press="onItemPress">
-                    <m:cells>
-                      <m:ObjectIdentifier title="{name}" text="{_id}"/>
-                      <m:ObjectNumber number="{quantity}" unit="шт."/>
-                      <m:ObjectNumber number="{price}" unit="р."/>
-                      <m:ObjectNumber number="{total}" unit="р."/>
-                    </m:cells>
-                  </m:ColumnListItem>
-                </m:items>
-              </m:Table>
+              <m:VBox>
+                <f:SimpleForm editable="true" layout="ResponsiveGridLayout ">
+                  <f:content>
+                    <m:Label text="{i18n>name}"/>
+                    <m:Input value="{name}" id="n"/>
+                  </f:content>
+                </f:SimpleForm>
+                <m:Table
+                  id="salesOrderRows"
+                  growing="true"
+                  growingThreshold="100"
+                  delete="onDeleteRowPress"
+                  mode="Delete"
+                  >
+                  <m:headerToolbar>
+                    <m:Toolbar>
+                      <m:Title text="{i18n>rows}"/>
+                      <m:ToolbarSpacer />
+                      <m:Button icon="sap-icon://add" press="onAddActionPress"/>
+                    </m:Toolbar>
+                  </m:headerToolbar>
+                  <m:columns>
+                    <m:Column width="50%">
+                      <m:Text text="{i18n>name}"/>
+                    </m:Column>
+                    <m:Column>
+                      <m:Text text="код"/>
+                    </m:Column>
+                    <m:Column>
+                      <m:Text text="{i18n>qty}"/>
+                    </m:Column>
+                    <m:Column>
+                      <m:Text text="{i18n>price}"/>
+                    </m:Column>
+                    <m:Column>
+                      <m:Text text="{i18n>total}"/>
+                    </m:Column>
+                  </m:columns>
+                  <!--<m:items>
+                    <m:ColumnListItem
+                      type="Active"
+                      press="onItemPress">
+                      <m:cells>
+                        <m:ObjectIdentifier title="{name}"/>
+                        <m:ObjectNumber number="{quantity}" unit="шт."/>
+                        <m:ObjectNumber number="{price}" unit="р."/>
+                        <m:ObjectNumber number="{total}" unit="р."/>
+                      </m:cells>
+                    </m:ColumnListItem>
+                  </m:items>-->
+                </m:Table>
+              </m:VBox>
             </blocks>
           </ObjectPageSubSection>
         </subSections>

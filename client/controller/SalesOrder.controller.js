@@ -5,14 +5,18 @@ sap.ui.define([
   'tms/basic/controller/InstanceRelationsController',
   'sap/ui/model/json/JSONModel',
   'sap/ui/model/Filter',
-  'sap/ui/model/FilterOperator'
-], function(Controller, JSONModel, Filter, FilterOperator) {
+  'sap/ui/model/FilterOperator',
+	"tms/basic/model/formatter"
+], function(Controller, JSONModel, Filter, FilterOperator, formatter) {
   return Controller.extend('tms.basic.controller.SalesOrder', {
+    formatter: formatter,
 
     onInit: function() {
       let that = this;
       that.setModel(new JSONModel(), 'view');
       that.getRouter().getRoute('sales-order').attachPatternMatched(that._onRoutePatternMatched, that);
+      //let oModel = that.getModel();
+      //oModel.attachPropertyChange(that.onPropertyChange, that);
     },
 
     _onRoutePatternMatched: function(oEvent) {
@@ -43,23 +47,35 @@ sap.ui.define([
             new sap.m.ObjectIdentifier({title: "{name}"}),
             new sap.m.ObjectNumber({number: "{quantity}", unit: "шт."}),
             new sap.m.ObjectNumber({number: "{price}", unit: "р."}),
-            new sap.m.ObjectNumber({number: "{total}", unit: "р."})
+            new sap.m.ObjectNumber({
+              number: {
+                parts: [
+                  {path: 'quantity'},
+                  {path: 'price'}],
+                formatter: (quantity, price) => that.formatter.salesOrderRowTotal(quantity, price)
+              },
+              unit: "р."
+            })
           ]
         })
       });
 
       var oView = that.getView();
       oView.bindElement('/SalesOrders(\'' + sId + '\')');
+      //let oModel = that.getModel();
+      //let oBinding = oModel.bindContext('/SalesOrders(\'' + sId + '\')');
+      //let oBinding = oView.getBinding();
       //var oForm = oView.byId('salesOrderRowForm');
       //связать форму редактирования строки с первым элементом, если он есть
       
       //oForm.setBindingContext(undefined);
-      //console.log(oForm);
+      //console.log(oBinding);
+      //oBinding.attachChange((e) => that.onPropertyChange(e));
     },
 
     onPropertyChange: function(oEvent) {
-      /*let aParameters = oEvent.getParameters();
-      let oContext = oEvent.getParameter('context');*/
+      //let aParameters = oEvent.getParameters();
+      //let oContext = oEvent.getParameter('context');
       //console.log(oContext);
       //console.log(aParameters);
       /*if ((oContext && /^\/Rows\//.exec(oContext.sPath)) || (aParameters && /^\/Rows\//.exec(aParameters.path))) {

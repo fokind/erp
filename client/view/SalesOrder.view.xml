@@ -21,9 +21,9 @@
         </breadcrumbs>
       </ObjectPageHeader>
     </headerTitle>
-    <headerContent>
+    <!--<headerContent>
       <m:ObjectStatus title="{i18n>total}" text="{path: '/Rows', formatter: '.formatter.salesOrderTotal'}"/>
-    </headerContent>
+    </headerContent>-->
     <sections>
       <ObjectPageSection title="{i18n>common}">
         <subSections>

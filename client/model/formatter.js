@@ -3,17 +3,16 @@
 
 sap.ui.define([], function() {
   return {
-    salesOrderRowTotal: function(fCost, fQuantity) {
-      //TODO исправить проблему с русским форматом чисел (запятая вместо точки)
-      return fCost * fQuantity;
-    },
-    
-    salesOrderTotal: function(aRows) {
-      var fTotal = 0;
-      $.each(aRows, function(oRow) {
-        fTotal = fTotal + (oRow.quantity * oRow.cost);
-      }); //end of $each.
+    salesOrderRowTotal: function(sCost, sQuantity) {
+      let fTotal = 0;
+      if (sCost && sQuantity) {
+        let oFloatFormat = sap.ui.core.format.NumberFormat.getFloatInstance();
+        let fCost = oFloatFormat.parse(sCost);
+        let fQuantity = oFloatFormat.parse(sQuantity);
+        let fTotal = fQuantity * fCost;
+      }
+
       return fTotal;
-    }
+    },
   };
 });

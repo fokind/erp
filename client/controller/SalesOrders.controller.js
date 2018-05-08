@@ -13,16 +13,7 @@ sap.ui.define([
     },
 
     _onRoutePatternMatched: function(oEvent) {
-      //let oModel = this.getOwnerComponent().getModel();
-      //let oView = this.getView();
-      //oView.setBindingContext(oModel.createBindingContext('/SalesOrders'));
-      //.byId("salesOrders").setBindingContext(oModel.createBindingContext('/SalesOrders'));
-      //console.log(oModel);
-      //console.log(oView);
-      
-      //this.getView().bindElement('/SalesOrders');
     },
-
 
     onItemPress: function(oEvent) {
       let that = this;
@@ -37,42 +28,25 @@ sap.ui.define([
     },
 
     onDeletePress: function(oControlEvent) {
-      //console.log(oControlEvent.getParameter('listItem'));
       let oBindingContext = oControlEvent.getParameter('listItem').getBindingContext();
-      //console.log(oBindingContext);
-      oBindingContext.delete();//.then(() => console.log(oControlEvent.getParameter('listItem')));
+      oBindingContext.delete();
     },
 
 		onCloseDialog: function() {
-      //this.fnDeleteInstance();
 			this.getView().byId('confirmDeleteDialog').close();
 		},
 
     onAddActionPress: function(oControlEvent) {
       let that = this;
       let oBinding = that.byId("salesOrders").getBinding("items");
-      //console.log(oBinding);
       let oContext = oBinding.create({//пустой объект передавать нельзя
         //"_id": "",//пустую передавать нельзя, т.к. база данных должна сама присвоить ключ, использовать в таблице тоже нельзя, т.к. на момент создания id должна быть
         "name": "",
         "total": 0
       });
 
-
-
       oContext.created().then(() => {
-        //console.log(oBinding);
         let sId = oContext.getProperty('_id');
-        //that.getModel().submitBatch(that.getModel().getUpdateGroupId());
-        //oBinding.refresh();
-        /*console.log(oContext);
-        console.log(oContext.oCreatePromise);
-        console.log(oContext.checkUpdate());
-        console.log(oContext.getGroupId());
-        console.log(oContext.getUpdateGroupId());
-        console.log(oContext.isTransient());
-        console.log(oContext.oSyncCreatePromise);*/
-        //let sId = oContext.getObject('_id');
         //после создания элемента чтобы создать следующий необходимо обновить модель, но сразу обновлять нельзя, т.к. слетит позиция
         sap.ui.core.UIComponent.getRouterFor(that).navTo('sales-order', {id: sId});
       });

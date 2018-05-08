@@ -62,38 +62,6 @@ sap.ui.define([
 
       var oView = that.getView();
       oView.bindElement('/SalesOrders(\'' + sId + '\')');
-      //let oModel = that.getModel();
-      //let oBinding = oModel.bindContext('/SalesOrders(\'' + sId + '\')');
-      //let oBinding = oView.getBinding();
-      //var oForm = oView.byId('salesOrderRowForm');
-      //связать форму редактирования строки с первым элементом, если он есть
-      
-      //oForm.setBindingContext(undefined);
-      //console.log(oBinding);
-      //oBinding.attachChange((e) => that.onPropertyChange(e));
-    },
-
-    onPropertyChange: function(oEvent) {
-      //let aParameters = oEvent.getParameters();
-      //let oContext = oEvent.getParameter('context');
-      //console.log(oContext);
-      //console.log(aParameters);
-      /*if ((oContext && /^\/Rows\//.exec(oContext.sPath)) || (aParameters && /^\/Rows\//.exec(aParameters.path))) {
-        //console.log(oContext);
-        
-        let that = this;
-        let oModel = that.getModel('Instance');
-        let aRows = oModel.getProperty('/Rows').filter(e => !e.deleted &&
-          !isNaN(e.quantity) &&
-          !isNaN(e.unitPrice));
-
-        //console.log(aRows);
-          
-        let fTotal = aRows.length == 0 ? 0 : _.sum(aRows
-          .map(e => e.quantity * e.unitPrice));
-
-        oModel.setProperty('/total', fTotal);
-      };*/
     },
 
     onRowDetailPress: function(oControlEvent) {
@@ -108,19 +76,6 @@ sap.ui.define([
     onDeleteRowPress: function(oControlEvent) {
       let oBindingContext = oControlEvent.getParameter('listItem').getBindingContext();
       oBindingContext.delete();
-    },
-
-    fnRowOpen: function(oRow) {
-
-    },
-
-		formatterCalculateRowTotal: function(fUnitPrice, fQuantity) {
-      return (fUnitPrice === undefined || fQuantity === undefined) ? 0 : fUnitPrice * fQuantity;
-    },
-
-    formatterCalculateTotal: function(aRows) {
-      //console.log(aRows);
-      return 0;
     },
 
     onAddActionPress: function(oControlEvent) {
@@ -138,10 +93,7 @@ sap.ui.define([
       });
 
       //метод рефреш необходимо вызывать у родительского абсолютного биндинга
-      
-
       oContext.created().then(() => {
-        
         oModel.refresh();
         //открыть диалог
       });      

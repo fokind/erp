@@ -24,7 +24,6 @@ sap.ui.define([
       oViewModel.setProperty('/id', sId);
 
       //фильтр parentId = sId
-      
       that.getView().byId("salesOrderRows").bindItems({
         path: '/SalesOrderRows',
         filters: [
@@ -39,7 +38,7 @@ sap.ui.define([
         },
         template: new sap.m.ColumnListItem({
           type: sap.m.ListType.Active,
-          press: ".onItemPress",
+          press: this.onRowDetailPress,
           cells: [
             new sap.m.ObjectIdentifier({title: "{name}"}),
             new sap.m.ObjectIdentifier({title: "{parentId}"}),
@@ -50,12 +49,6 @@ sap.ui.define([
         })
       });   
       that.getView().bindElement('/SalesOrders(\'' + sId + '\')');
-
-
-
-      //отдельно контекст для строк
-      
-      
     },
 
     onPropertyChange: function(oEvent) {
@@ -111,24 +104,26 @@ sap.ui.define([
 
     onDeleteRowPress: function(oControlEvent) {
       //console.log(oControlEvent);
-      let that = this;
+      //let that = this;
       let oBindingContext = oControlEvent.getParameter('listItem').getBindingContext();
-      let iIndex = oBindingContext.iIndex;
+      oBindingContext.delete();
+
+      //let iIndex = oBindingContext.iIndex;
       //console.log(oBindingContext.sPath);
 
-      let oModel = that.getOwnerComponent().getModel();
-      let o = oBindingContext.getObject();//TODO теперь нужно получить соответствующий контекст в списке, который потом удалить!!!!!!!!!!!!!
+      //let oModel = that.getOwnerComponent().getModel();
+      //let o = oBindingContext.getObject();//TODO теперь нужно получить соответствующий контекст в списке, который потом удалить!!!!!!!!!!!!!
       //let oContext = oModel.createBindingContext('/SalesOrderRows(' + o._id + ')', oBindingContext);
       
-      let oDataListBinding = oModel.bindList('/SalesOrderRows');
-      let a = oDataListBinding.getContexts();
-      let oDataContextBinding = oModel.bindContext('/SalesOrderRows(' + o._id + ')');
-      let oContext = oDataContextBinding.oElementContext;
+      //let oDataListBinding = oModel.bindList('/SalesOrderRows');
+      //let a = oDataListBinding.getContexts();
+      //let oDataContextBinding = oModel.bindContext('/SalesOrderRows(' + o._id + ')');
+      //let oContext = oDataContextBinding.oElementContext;
 
       //console.log(oDataListBinding);
       //console.log(a);
-      console.log(oContext);
-      oContext.delete();
+      //console.log(oContext);
+      //oContext.delete();
       //let aContexts = oDataListBinding.getContexts();
       //console.log(aContexts);
 

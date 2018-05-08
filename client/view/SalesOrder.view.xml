@@ -55,9 +55,6 @@
                       <m:Text text="{i18n>name}"/>
                     </m:Column>
                     <m:Column>
-                      <m:Text text="код"/>
-                    </m:Column>
-                    <m:Column>
                       <m:Text text="{i18n>qty}"/>
                     </m:Column>
                     <m:Column>
@@ -67,19 +64,28 @@
                       <m:Text text="{i18n>total}"/>
                     </m:Column>
                   </m:columns>
-                  <!--<m:items>
-                    <m:ColumnListItem
-                      type="Active"
-                      press="onItemPress">
-                      <m:cells>
-                        <m:ObjectIdentifier title="{name}"/>
-                        <m:ObjectNumber number="{quantity}" unit="шт."/>
-                        <m:ObjectNumber number="{price}" unit="р."/>
-                        <m:ObjectNumber number="{total}" unit="р."/>
-                      </m:cells>
-                    </m:ColumnListItem>
-                  </m:items>-->
                 </m:Table>
+              </m:VBox>
+            </blocks>
+          </ObjectPageSubSection>
+          <ObjectPageSubSection title="Строка заказа">
+            <blocks>
+              <m:VBox>
+              <f:SimpleForm
+                id="salesOrderRowForm"
+                visible="false"
+                editable="true"
+                layout="ResponsiveGridLayout"
+                class="editableForm">
+                <f:content>
+                  <m:Label text="{i18n>name}"/>
+                  <m:Input value="{name}"/>
+                  <m:Label text="{i18n>qty}"/>
+                  <m:Input value="{quantity}"/>
+                  <m:Label text="{i18n>price}"/>
+                  <m:Input value="{price}"/>
+                </f:content>
+              </f:SimpleForm>
               </m:VBox>
             </blocks>
           </ObjectPageSubSection>

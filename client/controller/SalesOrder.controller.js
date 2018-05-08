@@ -41,14 +41,20 @@ sap.ui.define([
           press: (e) => that.onRowDetailPress(e),
           cells: [
             new sap.m.ObjectIdentifier({title: "{name}"}),
-            new sap.m.ObjectIdentifier({title: "{parentId}"}),
             new sap.m.ObjectNumber({number: "{quantity}", unit: "шт."}),
             new sap.m.ObjectNumber({number: "{price}", unit: "р."}),
             new sap.m.ObjectNumber({number: "{total}", unit: "р."})
           ]
         })
-      });   
-      that.getView().bindElement('/SalesOrders(\'' + sId + '\')');
+      });
+
+      var oView = that.getView();
+      oView.bindElement('/SalesOrders(\'' + sId + '\')');
+      //var oForm = oView.byId('salesOrderRowForm');
+      //связать форму редактирования строки с первым элементом, если он есть
+      
+      //oForm.setBindingContext(undefined);
+      //console.log(oForm);
     },
 
     onPropertyChange: function(oEvent) {
@@ -75,105 +81,21 @@ sap.ui.define([
     },
 
     onRowDetailPress: function(oControlEvent) {
-      //console.log(oControlEvent);
-
       let that = this;
-      //console.log(that);
       let oBindingContext = oControlEvent.getSource().getBindingContext();
-      console.log(oBindingContext);
-      /*let sPath = oBindingContext.sPath;
-      let o = oBindingContext.getObject(sPath);
-      console.log(sPath);*/
-      //let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-
-      /*oRouter.navTo('sales-order', {
-        id: o._id,
-      });*/
-
-
-      
-      //при открытии диалога передавать клон связанного элемента
-      //при закрытии копировать клон в модель сущности
-      
-
-      //let that = this;
-
-      //let sId = oControlEvent.getParameters();
-      //console.log(sId);
-
       var oView = that.getView();
-      var oDialog = oView.byId('salesOrderRowDialog');
-
-      if (!oDialog) {
-        oDialog = sap.ui.xmlfragment(oView.getId(), 'tms.basic.view.SalesOrderRowDialog', that);
-        oView.addDependent(oDialog);
-      }
-
-      //oDialog.bindElement('/SalesOrderRows(\'' + o._id + '\')');
-      oDialog.setBindingContext(oBindingContext);
-      oDialog.addStyleClass('sapUiSizeCompact');
-      oDialog.open();
+      var oForm = oView.byId('salesOrderRowForm');
+      oForm.setBindingContext(oBindingContext);
+      oForm.setProperty("visible", true);
     },
 
     onDeleteRowPress: function(oControlEvent) {
-      //console.log(oControlEvent);
-      //let that = this;
       let oBindingContext = oControlEvent.getParameter('listItem').getBindingContext();
       oBindingContext.delete();
-
-      //let iIndex = oBindingContext.iIndex;
-      //console.log(oBindingContext.sPath);
-
-      //let oModel = that.getOwnerComponent().getModel();
-      //let o = oBindingContext.getObject();//TODO теперь нужно получить соответствующий контекст в списке, который потом удалить!!!!!!!!!!!!!
-      //let oContext = oModel.createBindingContext('/SalesOrderRows(' + o._id + ')', oBindingContext);
-      
-      //let oDataListBinding = oModel.bindList('/SalesOrderRows');
-      //let a = oDataListBinding.getContexts();
-      //let oDataContextBinding = oModel.bindContext('/SalesOrderRows(' + o._id + ')');
-      //let oContext = oDataContextBinding.oElementContext;
-
-      //console.log(oDataListBinding);
-      //console.log(a);
-      //console.log(oContext);
-      //oContext.delete();
-      //let aContexts = oDataListBinding.getContexts();
-      //console.log(aContexts);
-
-      //oBindingContext.delete().then(() => { console.log(oBindingContext); });
     },
 
     fnRowOpen: function(oRow) {
-      //let that = this;
-      //let oContext = oControlEvent.getSource().getBindingContext('Instance');
-      
-      //let sPath = oContext.getPath();
-      ///oControlEvent.getSource().getBindingContext('Instance').sPath;
-      //this.fnRowOpen(sPath);
 
-      //let that = this;
-      //const sModelName = 'Instance';//TODO заменить на модель по умолчанию
-      //заблокировать для остальных пользователей (весь заказ, включая дочерние объекты должен считаться заблокированным)
-
-      /*var oView = that.getView();
-      var oDialog = oView.byId('salesOrderRowDialog');
-
-      if (!oDialog) {
-        oDialog = sap.ui.xmlfragment(oView.getId(), 'tms.basic.view.SalesOrderRowDialog', that);
-        oView.addDependent(oDialog);
-      }*/
-
-      //let oRow = that.getModel(sModelName).getProperty(sPath);
-      //let oData = _.cloneDeep(oRow);
-      
-      //oDialog.setModel(new sap.ui.model.json.JSONModel(oData), 'Row');
-      //oDialog.setModel(oContext.oModel, 'Instance');
-      /*let aRows = this.getModel('Instance').getProperty('/Rows');
-      let sPath = '/Rows/' + aRows.indexOf(oRow);
-
-      oDialog.bindElement({model: 'Instance', path: sPath});
-      oDialog.addStyleClass('sapUiSizeCompact');
-      oDialog.open();*/
     },
 
 		formatterCalculateRowTotal: function(fUnitPrice, fQuantity) {

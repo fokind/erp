@@ -39,8 +39,8 @@ sap.ui.define([
     onDeletePress: function(oControlEvent) {
       //console.log(oControlEvent.getParameter('listItem'));
       let oBindingContext = oControlEvent.getParameter('listItem').getBindingContext();
-      console.log(oBindingContext);
-      //oBindingContext.delete().then(() => console.log(oControlEvent.getParameter('listItem')));
+      //console.log(oBindingContext);
+      oBindingContext.delete();//.then(() => console.log(oControlEvent.getParameter('listItem')));
     },
 
 		onCloseDialog: function() {

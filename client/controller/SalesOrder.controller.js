@@ -38,7 +38,7 @@ sap.ui.define([
         },
         template: new sap.m.ColumnListItem({
           type: sap.m.ListType.Active,
-          press: this.onRowDetailPress,
+          press: (e) => that.onRowDetailPress(e),
           cells: [
             new sap.m.ObjectIdentifier({title: "{name}"}),
             new sap.m.ObjectIdentifier({title: "{parentId}"}),
@@ -75,21 +75,33 @@ sap.ui.define([
     },
 
     onRowDetailPress: function(oControlEvent) {
+      //console.log(oControlEvent);
+
+      let that = this;
+      //console.log(that);
+      let oBindingContext = oControlEvent.getSource().getBindingContext();
+      console.log(oBindingContext);
+      /*let sPath = oBindingContext.sPath;
+      let o = oBindingContext.getObject(sPath);
+      console.log(sPath);*/
+      //let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+
+      /*oRouter.navTo('sales-order', {
+        id: o._id,
+      });*/
+
+
+      
       //при открытии диалога передавать клон связанного элемента
       //при закрытии копировать клон в модель сущности
-      //let that = this;
-      //let oContext = oControlEvent.getSource().getBindingContext('Instance');
       
-      //let sPath = oContext.getPath();
-      ///oControlEvent.getSource().getBindingContext('Instance').sPath;
-      //this.fnRowOpen(sPath);
 
       //let that = this;
-      //const sModelName = 'Instance';//TODO заменить на модель по умолчанию
-      //заблокировать для остальных пользователей (весь заказ, включая дочерние объекты должен считаться заблокированным)
 
-      /*var oView = that.getView();
-      let oContext = oControlEvent.getSource().getBindingContext('Instance');
+      //let sId = oControlEvent.getParameters();
+      //console.log(sId);
+
+      var oView = that.getView();
       var oDialog = oView.byId('salesOrderRowDialog');
 
       if (!oDialog) {
@@ -97,9 +109,10 @@ sap.ui.define([
         oView.addDependent(oDialog);
       }
 
-      oDialog.bindElement({model: 'Instance', path: oContext.sPath});
+      //oDialog.bindElement('/SalesOrderRows(\'' + o._id + '\')');
+      oDialog.setBindingContext(oBindingContext);
       oDialog.addStyleClass('sapUiSizeCompact');
-      oDialog.open();*/
+      oDialog.open();
     },
 
     onDeleteRowPress: function(oControlEvent) {

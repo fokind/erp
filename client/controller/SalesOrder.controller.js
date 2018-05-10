@@ -44,15 +44,17 @@ sap.ui.define([
           type: sap.m.ListType.Active,
           press: (e) => that.onRowDetailPress(e),
           cells: [
-            new sap.m.ObjectIdentifier({title: "{name}"}),
+            new sap.m.ObjectIdentifier({title: "{productName}"}),
             new sap.m.ObjectNumber({number: "{quantity}", unit: "шт."}),
-            new sap.m.ObjectNumber({number: "{price}", unit: "р."}),
+            new sap.m.ObjectNumber({number: "{unitPrice}", unit: "р."}),
+            new sap.m.ObjectNumber({number: "{taxes}", unit: "р."}),
+            new sap.m.ObjectNumber({number: "{discountPercent}", unit: "%"}),
             new sap.m.ObjectNumber({
               number: {
                 parts: [
                   {path: 'quantity'},
-                  {path: 'price'}],
-                formatter: (quantity, price) => that.formatter.salesOrderRowTotal(quantity, price)
+                  {path: 'unitPrice'}],
+                formatter: (quantity, unitPrice) => that.formatter.salesOrderRowTotal(quantity, unitPrice)
               },
               unit: "р."
             })
@@ -82,14 +84,16 @@ sap.ui.define([
       let that = this;
       let oModel = that.getOwnerComponent().getModel();
       let oDataListBinding = oModel.bindList('/SalesOrderRows');
-      let sParentId = that.getModel('view').getProperty('/id');
+      let sSalesOrderId = that.getModel('view').getProperty('/id');
 
       let oContext = oDataListBinding.create({
-        "name": "",
+        "productName": "",
         "quantity": 0,
-        "price": 0,
-        "total": 0,
-        "parentId": sParentId
+        "unitPrice": 0,
+        "taxes": 0,
+        "discountPercent": 0,
+        "subtotal": 0,
+        "salesOrderId": sSalesOrderId
       });
 
       //метод рефреш необходимо вызывать у родительского абсолютного биндинга

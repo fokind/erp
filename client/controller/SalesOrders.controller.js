@@ -42,6 +42,13 @@ sap.ui.define([
       let oContext = oBinding.create({//пустой объект передавать нельзя
         //"_id": "",//пустую передавать нельзя, т.к. база данных должна сама присвоить ключ, использовать в таблице тоже нельзя, т.к. на момент создания id должна быть
         "name": "",
+        "customerName": "",
+        "invoicingAddress": "",
+        "deliveryAddress": "",
+        "salesPersonName": "",
+        "statusName": "",
+        "untaxedAmount": 0,
+        "taxes": 0,
         "total": 0
       });
 

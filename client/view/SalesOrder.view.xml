@@ -9,7 +9,7 @@
 	xmlns:m="sap.m">
   <ObjectPageLayout id="salesOrder" useIconTabBar="true" showHeaderContent="true" showTitleInHeaderContent="true">
     <headerTitle>
-      <ObjectPageHeader objectTitle="{view>/id}" isObjectTitleAlwaysVisible="false" >
+      <ObjectPageHeader objectTitle="{number}" isObjectTitleAlwaysVisible="false" >
         <actions>
 					<ObjectPageHeaderActionButton icon="sap-icon://account" enabled="false"/>
         </actions>
@@ -19,11 +19,31 @@
 						<m:Link text="{i18n>salesOrders}" href="#/sales-orders"/>
 					</m:Breadcrumbs>
         </breadcrumbs>
+        
       </ObjectPageHeader>
     </headerTitle>
-    <!--<headerContent>
-      <m:ObjectStatus title="{i18n>total}" text="{path: '/Rows', formatter: '.formatter.salesOrderTotal'}"/>
-    </headerContent>-->
+    <headerContent>
+      <m:ToolbarSpacer />
+      <m:ObjectStatus
+        title="{i18n>date}"
+        text="{
+          path: 'dateTime',
+          type: 'sap.ui.model.type.DateTime',
+          formatOptions: {
+            style: 'short',
+            strictParsing: true,
+            source: {
+              UTC: true,
+              pattern: 'yyyy-MM-dd\'T\'HH:mm:ss.SSSZ'
+            }
+          }
+        }"
+      />
+      <m:ObjectStatus title="{i18n>untaxedAmount}" text="{untaxedAmount}"/>
+      <m:ObjectStatus title="{i18n>taxes}" text="{taxes}"/>
+      <m:ObjectStatus title="{i18n>total}" text="{total}"/>
+      <!--<m:ObjectStatus title="{i18n>total}" text="{path: '/Rows', formatter: '.formatter.salesOrderTotal'}"/>-->
+    </headerContent>
     <sections>
       <ObjectPageSection title="{i18n>common}">
         <subSections>
@@ -34,6 +54,16 @@
                   <f:content>
                     <m:Label text="{i18n>name}"/>
                     <m:Input value="{name}" id="n"/>
+                    <m:Label text="{i18n>customer}"/>
+                    <m:Input value="{customerName}"/>
+                    <m:Label text="{i18n>invoicingAddress}"/>
+                    <m:Input value="{invoicingAddress}"/>
+                    <m:Label text="{i18n>deliveryAddress}"/>
+                    <m:Input value="{deliveryAddress}"/>
+                    <m:Label text="{i18n>salesPerson}"/>
+                    <m:Input value="{salesPersonName}"/>
+                    <m:Label text="{i18n>status}"/>
+                    <m:Input value="{statusName}"/>
                   </f:content>
                 </f:SimpleForm>
                 <m:Table
@@ -51,17 +81,23 @@
                     </m:Toolbar>
                   </m:headerToolbar>
                   <m:columns>
-                    <m:Column width="50%">
-                      <m:Text text="{i18n>name}"/>
+                    <m:Column width="40%">
+                      <m:Text text="{i18n>product}"/>
                     </m:Column>
                     <m:Column>
                       <m:Text text="{i18n>qty}"/>
                     </m:Column>
                     <m:Column>
-                      <m:Text text="{i18n>price}"/>
+                      <m:Text text="{i18n>unitPrice}"/>
                     </m:Column>
                     <m:Column>
-                      <m:Text text="{i18n>total}"/>
+                      <m:Text text="{i18n>taxes}"/>
+                    </m:Column>
+                    <m:Column>
+                      <m:Text text="{i18n>discountPercent}"/>
+                    </m:Column>
+                    <m:Column>
+                      <m:Text text="{i18n>subtotal}"/>
                     </m:Column>
                   </m:columns>
                 </m:Table>
@@ -78,14 +114,14 @@
                 layout="ResponsiveGridLayout"
                 class="editableForm">
                 <f:content>
-                  <m:Label text="{i18n>name}"/>
-                  <m:Input value="{name}"/>
+                  <m:Label text="{i18n>product}"/>
+                  <m:Input value="{productName}"/>
                   <m:Label text="{i18n>qty}"/>
                   <m:Input value="{quantity}"/>
-                  <m:Label text="{i18n>price}"/>
-                  <m:Input value="{price}"/>
-                  <m:Label text="{i18n>total}"/>
-                  <m:Input value="{total}"/>
+                  <m:Label text="{i18n>unitPrice}"/>
+                  <m:Input value="{unitPrice}"/>
+                  <m:Label text="{i18n>discountPercent}"/>
+                  <m:Input value="{discountPercent}"/>
                 </f:content>
               </f:SimpleForm>
               </m:VBox>

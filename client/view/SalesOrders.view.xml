@@ -45,7 +45,19 @@
                 </m:headerToolbar>
                 <m:columns>
                   <m:Column>
-                    <m:Text text="{i18n>name}"/>
+                    <m:Text text="{i18n>number}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>date}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>customer}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>salesPerson}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>status}"/>
                   </m:Column>
                   <m:Column>
                     <m:Text text="{i18n>total}"/>
@@ -56,7 +68,11 @@
                     type="Active"
                     press="onItemPress">
                     <m:cells>
-                      <m:Text text="{name}"/>
+                      <m:Text text="{number}"/>
+                      <m:Text text="{dateTime}"/>
+                      <m:Text text="{customerName}"/>
+                      <m:Text text="{salesPersonName}"/>
+                      <m:Text text="{statusName}"/>
                       <m:ObjectNumber number="{total}" unit="р."/>
                     </m:cells>
                   </m:ColumnListItem>

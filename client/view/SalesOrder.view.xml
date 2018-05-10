@@ -84,6 +84,8 @@
                   <m:Input value="{quantity}"/>
                   <m:Label text="{i18n>price}"/>
                   <m:Input value="{price}"/>
+                  <m:Label text="{i18n>total}"/>
+                  <m:Input value="{total}"/>
                 </f:content>
               </f:SimpleForm>
               </m:VBox>

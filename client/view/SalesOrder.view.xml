@@ -7,7 +7,11 @@
 	xmlns:f="sap.ui.layout.form"
 	displayBlock="true"
 	xmlns:m="sap.m">
-  <ObjectPageLayout id="salesOrder" useIconTabBar="true" showHeaderContent="true" showTitleInHeaderContent="true">
+  <ObjectPageLayout
+    id="salesOrder"
+    useIconTabBar="true"
+    showHeaderContent="true"
+    showTitleInHeaderContent="true">
     <headerTitle>
       <ObjectPageHeader objectTitle="{number}" isObjectTitleAlwaysVisible="false" >
         <actions>
@@ -49,23 +53,33 @@
         <subSections>
           <ObjectPageSubSection title="{i18n>common}">
             <blocks>
+              <f:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout">
+                <f:content>
+                  <m:Label text="{i18n>name}"/>
+                  <m:Input value="{name}" id="n"/>
+                  <m:Label text="{i18n>customer}"/>
+                  <m:Input value="{customerName}"/>
+                  <m:Label text="{i18n>invoicingAddress}"/>
+                  <m:Input value="{invoicingAddress}"/>
+                  <m:Label text="{i18n>deliveryAddress}"/>
+                  <m:Input value="{deliveryAddress}"/>
+                  <m:Label text="{i18n>salesPerson}"/>
+                  <m:Input value="{salesPersonName}"/>
+                  <m:Label text="{i18n>status}"/>
+                  <m:Input value="{statusName}"/>
+                </f:content>
+              </f:SimpleForm>
+            </blocks>
+          </ObjectPageSubSection>
+        </subSections>
+      </ObjectPageSection>
+      <ObjectPageSection title="{i18n>rows}">
+        <subSections>
+          <ObjectPageSubSection title="{i18n>rows}">
+            <blocks>
               <m:VBox>
-                <f:SimpleForm editable="true" layout="ResponsiveGridLayout ">
-                  <f:content>
-                    <m:Label text="{i18n>name}"/>
-                    <m:Input value="{name}" id="n"/>
-                    <m:Label text="{i18n>customer}"/>
-                    <m:Input value="{customerName}"/>
-                    <m:Label text="{i18n>invoicingAddress}"/>
-                    <m:Input value="{invoicingAddress}"/>
-                    <m:Label text="{i18n>deliveryAddress}"/>
-                    <m:Input value="{deliveryAddress}"/>
-                    <m:Label text="{i18n>salesPerson}"/>
-                    <m:Input value="{salesPersonName}"/>
-                    <m:Label text="{i18n>status}"/>
-                    <m:Input value="{statusName}"/>
-                  </f:content>
-                </f:SimpleForm>
                 <m:Table
                   id="salesOrderRows"
                   growing="true"
@@ -75,7 +89,6 @@
                   >
                   <m:headerToolbar>
                     <m:Toolbar>
-                      <m:Title text="{i18n>rows}"/>
                       <m:ToolbarSpacer />
                       <m:Button icon="sap-icon://add" press="onAddActionPress"/>
                     </m:Toolbar>
@@ -96,34 +109,29 @@
                     <m:Column>
                       <m:Text text="{i18n>discountPercent}"/>
                     </m:Column>
-                    <m:Column>
+                    <!--<m:Column>
                       <m:Text text="{i18n>subtotal}"/>
-                    </m:Column>
+                    </m:Column>-->
                   </m:columns>
                 </m:Table>
-              </m:VBox>
-            </blocks>
-          </ObjectPageSubSection>
-          <ObjectPageSubSection title="Строка заказа">
-            <blocks>
-              <m:VBox>
-              <f:SimpleForm
-                id="salesOrderRowForm"
-                visible="false"
-                editable="true"
-                layout="ResponsiveGridLayout"
-                class="editableForm">
-                <f:content>
-                  <m:Label text="{i18n>product}"/>
-                  <m:Input value="{productName}"/>
-                  <m:Label text="{i18n>qty}"/>
-                  <m:Input value="{quantity}"/>
-                  <m:Label text="{i18n>unitPrice}"/>
-                  <m:Input value="{unitPrice}"/>
-                  <m:Label text="{i18n>discountPercent}"/>
-                  <m:Input value="{discountPercent}"/>
-                </f:content>
-              </f:SimpleForm>
+                <f:SimpleForm
+                  title="{i18n>salesOrderRow}"
+                  id="salesOrderRowForm"
+                  visible="false"
+                  editable="true"
+                  layout="ResponsiveGridLayout"
+                  class="editableForm">
+                  <f:content>
+                    <m:Label text="{i18n>product}"/>
+                    <m:Input value="{productName}"/>
+                    <m:Label text="{i18n>qty}"/>
+                    <m:Input value="{quantity}"/>
+                    <m:Label text="{i18n>unitPrice}"/>
+                    <m:Input value="{unitPrice}"/>
+                    <m:Label text="{i18n>discountPercent}"/>
+                    <m:Input value="{discountPercent}"/>
+                  </f:content>
+                </f:SimpleForm>
               </m:VBox>
             </blocks>
           </ObjectPageSubSection>

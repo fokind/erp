@@ -32,7 +32,7 @@ sap.ui.define([
         path: '/SalesOrderRows',
         filters: [
           new Filter({
-            path: 'parentId',
+            path: 'salesOrderId',
             operator: FilterOperator.EQ,
             value1: sId
           })
@@ -49,7 +49,7 @@ sap.ui.define([
             new sap.m.ObjectNumber({number: "{unitPrice}", unit: "р."}),
             new sap.m.ObjectNumber({number: "{taxes}", unit: "р."}),
             new sap.m.ObjectNumber({number: "{discountPercent}", unit: "%"}),
-            new sap.m.ObjectNumber({
+            /*new sap.m.ObjectNumber({
               number: {
                 parts: [
                   {path: 'quantity'},
@@ -57,7 +57,7 @@ sap.ui.define([
                 formatter: (quantity, unitPrice) => that.formatter.salesOrderRowTotal(quantity, unitPrice)
               },
               unit: "р."
-            })
+            })*/
           ]
         })
       });
@@ -86,6 +86,8 @@ sap.ui.define([
       let oDataListBinding = oModel.bindList('/SalesOrderRows');
       let sSalesOrderId = that.getModel('view').getProperty('/id');
 
+      console.log(1);
+
       let oContext = oDataListBinding.create({
         "productName": "",
         "quantity": 0,
@@ -98,6 +100,7 @@ sap.ui.define([
 
       //метод рефреш необходимо вызывать у родительского абсолютного биндинга
       oContext.created().then(() => {
+        console.log(2);
         oModel.refresh();
         //открыть диалог
       });      

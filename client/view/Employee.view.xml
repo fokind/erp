@@ -3,17 +3,19 @@
 	xmlns:mvc="sap.ui.core.mvc"
   xmlns:core="sap.ui.core"
   xmlns="sap.uxap"
+  xmlns:l="sap.ui.layout"
 	xmlns:f="sap.ui.layout.form"
 	displayBlock="true"
-	xmlns:m="sap.m"
-  xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-  <ObjectPageLayout useIconTabBar="true">
+	xmlns:m="sap.m">
+  <ObjectPageLayout
+    id="employee"
+    useIconTabBar="true"
+    showHeaderContent="true"
+    showTitleInHeaderContent="true">
     <headerTitle>
-      <ObjectPageHeader objectTitle="{Instance>/id}" markChanges="{Instance>/edit}">
+      <ObjectPageHeader objectTitle="{number}" isObjectTitleAlwaysVisible="false" >
         <actions>
-          <ObjectPageHeaderActionButton icon="sap-icon://edit" visible="{= !${Instance>/edit}}" press="onEditActionPress"/>
-					<ObjectPageHeaderActionButton icon="sap-icon://accept" type="Accept" visible="{Instance>/edit}" press="onSaveActionPress"/>
-					<ObjectPageHeaderActionButton icon="sap-icon://decline" type="Reject" visible="{Instance>/edit}" press="onCancelActionPress"/>
+					<ObjectPageHeaderActionButton icon="sap-icon://account" enabled="false"/>
         </actions>
         <breadcrumbs>
           <m:Breadcrumbs currentLocationText="{i18n>employee}">
@@ -21,21 +23,23 @@
 						<m:Link text="{i18n>employees}" href="#/employees"/>
 					</m:Breadcrumbs>
         </breadcrumbs>
+        
       </ObjectPageHeader>
     </headerTitle>
+    
     <sections>
-      <ObjectPageSection showTitle="false">
+      <ObjectPageSection title="{i18n>common}">
         <subSections>
-          <ObjectPageSubSection>
+          <ObjectPageSubSection title="{i18n>common}">
             <blocks>
-              <f:SimpleForm editable="true" layout="ResponsiveGridLayout ">
+              <f:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout">
                 <f:content>
-                  <m:Label text="{i18n>employeeName}"/>
-                  <m:Input editable="{Instance>/edit}" value="{Instance>/name}"/>
-                  <m:Label text="{i18n>username}"/>
-                  <m:Input editable="{Instance>/edit}" value="{Instance>/username}"/>
-                  <m:Label text="{i18n>email}"/>
-                  <m:Input editable="{Instance>/edit}" value="{Instance>/email}"/>
+                  <m:Label text="{i18n>firstName}"/>
+                  <m:Input value="{firstName}"/>
+                  <m:Label text="{i18n>lastName}"/>
+                  <m:Input value="{lastName}"/>
                 </f:content>
               </f:SimpleForm>
             </blocks>

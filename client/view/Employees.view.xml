@@ -2,19 +2,74 @@
 	controllerName="tms.basic.controller.Employees"
 	xmlns:mvc="sap.ui.core.mvc"
   xmlns:s="sap.m.semantic"
+  xmlns="sap.uxap"
 	displayBlock="true"
-	xmlns="sap.m">
-  <s:MasterPage id="employees" title="{i18n>title}" showNavButton="true" navButtonPress="onNavBack">
-    <s:content>
-      <List headerText="{i18n>employees}" items="{path:'Employees>/'}" mode="MultiSelect">
-        <StandardListItem title="{Employees>name}" press="onPress" type="Navigation" />
-      </List>
-    </s:content>
-    <s:addAction>
-      <s:AddAction enabled="true" press="onAddActionPress"/>
-    </s:addAction>
-    <s:deleteAction>
-      <s:DeleteAction enabled="true" press="onDeleteActionPress"/>
-    </s:deleteAction>
-  </s:MasterPage>
+	xmlns:m="sap.m">
+  <ObjectPageLayout useIconTabBar="true" showHeaderContent="true" showTitleInHeaderContent="true">
+    <headerTitle>
+      <ObjectPageHeader isObjectTitleAlwaysVisible="false" >
+        <actions>
+					<ObjectPageHeaderActionButton icon="sap-icon://account" enabled="false"/>
+        </actions>
+        <breadcrumbs>
+          <m:Breadcrumbs currentLocationText="{i18n>employees}">
+						<m:Link text="{i18n>home}" href="#"/>
+					</m:Breadcrumbs>
+        </breadcrumbs>
+      </ObjectPageHeader>
+    </headerTitle>
+    <sections>
+      <ObjectPageSection>
+        <subSections>
+          <ObjectPageSubSection>
+            <blocks>
+              <m:Table
+                id="employees"
+                growing="true"
+                growingThreshold="10"
+                items="{
+                  path: '/Employees',
+                  parameters: {
+                    $count: true
+                  }
+                }"
+                delete="onDeletePress"
+                mode="Delete"
+                >
+                <m:headerToolbar>
+                  <m:Toolbar>
+                    <m:Title text="{i18n>employees}"/>
+                    <m:ToolbarSpacer />
+                    <m:Button icon="sap-icon://add" press="onAddActionPress"/>
+                  </m:Toolbar>
+                </m:headerToolbar>
+                <m:columns>
+                  <m:Column>
+                    <m:Text text="{i18n>number}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>firstName}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>lastName}"/>
+                  </m:Column>
+                </m:columns>
+                <m:items>
+                  <m:ColumnListItem
+                    type="Active"
+                    press="onItemPress">
+                    <m:cells>
+                      <m:Text text="{number}"/>
+                      <m:Text text="{firstName}"/>
+                      <m:Text text="{lastName}"/>
+                    </m:cells>
+                  </m:ColumnListItem>
+                </m:items>
+              </m:Table>
+            </blocks>
+          </ObjectPageSubSection>
+        </subSections>
+      </ObjectPageSection>
+    </sections>
+  </ObjectPageLayout>
 </mvc:View>

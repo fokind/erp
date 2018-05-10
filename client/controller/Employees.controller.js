@@ -2,55 +2,34 @@
 'use strict';
 
 sap.ui.define([
-  'sap/ui/core/mvc/Controller',
+  'tms/basic/controller/ListController',
 ], function(Controller) {
   return Controller.extend('tms.basic.controller.Employees', {
     onInit: function() {
-      // let that = this;
-      // that.getView().setModel(new sap.ui.model.json.JSONModel());
-    },
-
-    onAfterRendering: function(oControlEvent) {
-      this.update();
-    },
-
-    update: function() {
       let that = this;
-      let oModel = that.getOwnerComponent().getModel('Employees');
-      oModel.loadData(
-        $.sap.formatMessage(
-          '{0}Employees',
-          that.getOwnerComponent()
-            .getManifestEntry('/sap.app/dataSources/api/uri')
-        ),
-        '', true, 'GET', false, false,
-      );
+      that.aConfigModels = [];
+      var oRouter = that.getRouter();
+      oRouter.attachRoutePatternMatched(that._onRoutePatternMatched, that);
     },
 
-    onPress: function(oEvent) {
+    _onRoutePatternMatched: function(oEvent) {
+    },
+
+    onItemPress: function(oEvent) {
       let that = this;
-      let oBindingContext = oEvent.getSource().getBindingContext('Employees');
-      let o = oBindingContext.oModel.oData[oBindingContext.getPath().substr(1)];
-      sap.m.MessageToast.show(o.id);
+      let oBindingContext = oEvent.getSource().getBindingContext();
+      let sPath = oBindingContext.sPath;
+      let o = oBindingContext.getObject(sPath);
       let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
 
       oRouter.navTo('employee', {
-        id: o.id,
+        id: o._id,
       });
     },
 
-    onDeleteActionPress: function() {
-      let that = this;
-      var oView = that.getView();
-      var oDialog = oView.byId('confirmDeleteDialog');
-      // create dialog lazily
-      if (!oDialog) {
-         // create dialog via fragment factory
-         oDialog = sap.ui.xmlfragment(oView.getId(), 'tms.basic.view.Dialog', that);
-         oView.addDependent(oDialog);
-      }
-
-      oDialog.open();
+    onDeletePress: function(oControlEvent) {
+      let oBindingContext = oControlEvent.getParameter('listItem').getBindingContext();
+      oBindingContext.delete();
     },
 
 		onCloseDialog: function() {
@@ -58,38 +37,28 @@ sap.ui.define([
 		},
 
     onAddActionPress: function(oControlEvent) {
-      //отправить запрос POST в API
       let that = this;
-      let oAccessToken = Cookies.getJSON('AccessToken');
-
-      $.post({
-        url: $.sap.formatMessage(
-          '{0}Employees',
-          that.getOwnerComponent()
-            .getManifestEntry('/sap.app/dataSources/api/uri')
-        ),
-      }).done(function (data) {
-        //вывести окно создания объекта
-        console.log(data);
-        //обновить таблицу
-        that.update();
-      }).fail(function (err) {
-        console.log(err);
+      let oBinding = that.byId("employees").getBinding("items");
+      let oContext = oBinding.create({//пустой объект передавать нельзя
+        //"_id": "",//пустую передавать нельзя, т.к. база данных должна сама присвоить ключ, использовать в таблице тоже нельзя, т.к. на момент создания id должна быть
+        "firstName": "",
+        "lastName": "",
+        "isSalesPerson": false
       });
-      //получить id, вывести сообщение
-    },    
 
-    onNavBack: function() {
+      oContext.created().then(() => {
+        let sId = oContext.getProperty('_id');
+        //после создания элемента чтобы создать следующий необходимо обновить модель, но сразу обновлять нельзя, т.к. слетит позиция
+        sap.ui.core.UIComponent.getRouterFor(that).navTo('employee', {id: sId});
+      });
+    },
+
+    navTo: function(oData) {
       let that = this;
-      let oHistory = sap.ui.core.routing.History.getInstance();
-      let sPreviousHash = oHistory.getPreviousHash();
-
-      if (sPreviousHash !== undefined) {
-        window.history.go(-1);
-      } else {
-        let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
-        oRouter.navTo('home', {}, true);
-      }
+      let oRouter = sap.ui.core.UIComponent.getRouterFor(that);
+      oRouter.navTo('employee', {
+        id: oData.id,
+      });
     },
   });
 });

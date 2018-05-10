@@ -1,42 +1,29 @@
-/* global sap $ Cookies window */
+/* global sap $ Cookies window JSON */
 'use strict';
 
 sap.ui.define([
-  'tms/basic/controller/InstanceController',
-], function(Controller) {
+  'tms/basic/controller/InstanceRelationsController',
+  'sap/ui/model/json/JSONModel',
+	"tms/basic/model/formatter"
+], function(Controller, JSONModel, formatter) {
   return Controller.extend('tms.basic.controller.Employee', {
+    formatter: formatter,
+
     onInit: function() {
       let that = this;
-      that.aConfigModels = [
-        {
-          name: 'Instance',
-          entity: 'Employees',
-          filter: {
-            fields: {
-              name: true,
-              username: true,
-              email: true,
-              edit: true,
-              deleted: true
-            }
-          },
-        },
-      ];
-
-      var oRouter = that.getRouter();
-      oRouter.attachRoutePatternMatched(that._onRouteMatched, that);
+      that.setModel(new JSONModel(), 'view');
+      that.getRouter().getRoute('employee').attachPatternMatched(that._onRoutePatternMatched, that);
     },
 
-    onEditActionPress: function(oControlEvent) {
-      this.fnPatchEdit(true);
-    },
+    _onRoutePatternMatched: function(oEvent) {
+      let that = this;
+      
+      let oViewModel = that.getModel('view');
+      let sId = oEvent.getParameter('arguments').id;
+      oViewModel.setProperty('/id', sId);
 
-    onSaveActionPress: function(oControlEvent) {
-      this.fnSaveInstance();
-    },
-
-    onCancelActionPress: function(oControlEvent) {
-      this.fnPatchEdit(false);
+      var oView = that.getView();
+      oView.bindElement('/Employees(\'' + sId + '\')');
     },
   });
 });

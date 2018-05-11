@@ -47,6 +47,16 @@
       <m:ObjectStatus title="{i18n>taxes}" text="{taxes}"/>
       <m:ObjectStatus title="{i18n>total}" text="{total}"/>
       <!--<m:ObjectStatus title="{i18n>total}" text="{path: '/Rows', formatter: '.formatter.salesOrderTotal'}"/>-->
+
+      <m:SegmentedButton selectedKey="SBYes">
+				<m:items>
+					<m:SegmentedButtonItem text="Создан" key="SBYes"/>
+					<m:SegmentedButtonItem text="Подтвержден"/>
+					<m:SegmentedButtonItem text="Оплачен"/>
+					<m:SegmentedButtonItem text="Закрыт"/>
+					<m:SegmentedButtonItem text="Отменен"/>
+				</m:items>
+			</m:SegmentedButton>
     </headerContent>
     <sections>
       <ObjectPageSection title="{i18n>common}">

@@ -65,6 +65,16 @@
 					"synchronizationMode": "None",
 					"operationMode": "Server"
 				}
+			},
+			"Employees": {
+				"dataSource": "default",
+				"settings": {
+					"autoExpandSelect": true,
+					"groupId": "$direct",
+					"synchronizationMode": "None",
+					"operationMode": "Server",
+					"serviceUrl": "/Employees/"
+				}
 			}
 		},
 		"resources": {

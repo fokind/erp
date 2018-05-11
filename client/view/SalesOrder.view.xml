@@ -66,7 +66,21 @@
                   <m:Label text="{i18n>deliveryAddress}"/>
                   <m:Input value="{deliveryAddress}"/>
                   <m:Label text="{i18n>salesPerson}"/>
-                  <m:Input value="{salesPersonName}"/>
+                  <m:Select
+                    forceSelection="false"
+                    selectedKey="{salesPersonId}"
+                    items="{
+                      path: '/Employees',
+                      filters: [
+                        {
+                          path: 'isSalesPerson',
+                          operator: 'EQ',
+                          value1: 'true'
+                        }
+                      ]
+                    }">
+                    <core:Item key="{_id}" text="{= ${firstName} + ' ' + ${lastName}}" />
+                  </m:Select>
                   <m:Label text="{i18n>status}"/>
                   <m:Input value="{statusName}"/>
                 </f:content>

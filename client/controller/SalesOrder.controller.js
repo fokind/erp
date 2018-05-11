@@ -62,8 +62,11 @@ sap.ui.define([
         })
       });
 
+      //получить байндинг, подписать на его событие
+
       var oView = that.getView();
       oView.bindElement('/SalesOrders(\'' + sId + '\')');
+      
     },
 
     onRowDetailPress: function(oControlEvent) {

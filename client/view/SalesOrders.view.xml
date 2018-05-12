@@ -82,7 +82,7 @@
                         }
                       }"/>
                       <m:Text text="{customerName}"/>
-                      <m:Text text="{salesPersonName}"/>
+                      <m:Text text="{salesPerson/firstName}"/>
                       <m:Text text="{statusName}"/>
                       <m:ObjectNumber number="{total}" unit="р."/>
                     </m:cells>

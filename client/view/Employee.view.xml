@@ -40,6 +40,8 @@
                   <m:Input value="{firstName}"/>
                   <m:Label text="{i18n>lastName}"/>
                   <m:Input value="{lastName}"/>
+                  <m:Label text="{i18n>isSalesPerson}"/>
+                  <m:CheckBox selected="{isSalesPerson}"/>
                 </f:content>
               </f:SimpleForm>
             </blocks>

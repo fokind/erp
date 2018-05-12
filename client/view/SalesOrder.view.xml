@@ -48,13 +48,14 @@
       <m:ObjectStatus title="{i18n>total}" text="{total}"/>
       <!--<m:ObjectStatus title="{i18n>total}" text="{path: '/Rows', formatter: '.formatter.salesOrderTotal'}"/>-->
 
-      <m:SegmentedButton selectedKey="SBYes">
+      <m:SegmentedButton selectedKey="{statusKey}">
 				<m:items>
-					<m:SegmentedButtonItem text="Создан" key="SBYes"/>
-					<m:SegmentedButtonItem text="Подтвержден"/>
-					<m:SegmentedButtonItem text="Оплачен"/>
-					<m:SegmentedButtonItem text="Закрыт"/>
-					<m:SegmentedButtonItem text="Отменен"/>
+					<m:SegmentedButtonItem text="Создан" key="created"/>
+					<m:SegmentedButtonItem text="Подтвержден" key="confirmed"/>
+					<m:SegmentedButtonItem text="Выставлен счет" key="invoiced"/>
+					<m:SegmentedButtonItem text="Оплачен" key="payed"/>
+					<m:SegmentedButtonItem text="Закрыт" key="closed"/>
+					<m:SegmentedButtonItem text="Отменен" key="cancelled"/>
 				</m:items>
 			</m:SegmentedButton>
     </headerContent>
@@ -91,8 +92,6 @@
                     }">
                     <core:Item key="{_id}" text="{= ${firstName} + ' ' + ${lastName}}" />
                   </m:Select>
-                  <m:Label text="{i18n>status}"/>
-                  <m:Input value="{statusName}"/>
                 </f:content>
               </f:SimpleForm>
             </blocks>

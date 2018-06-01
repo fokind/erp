@@ -1,2 +1,2 @@
-# Caixana
+# OpenSource ERP
 LoopBack application example.

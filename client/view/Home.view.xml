@@ -47,6 +47,24 @@
                   </layout:BlockLayout>
                 </uxap:blocks>
               </uxap:ObjectPageSubSection>
+
+              <uxap:ObjectPageSubSection title="{i18n>options}">
+                <uxap:blocks>
+                  <layout:BlockLayout>
+                    <layout:content>
+                      <layout:BlockLayoutRow>
+                        <layout:content>
+                          <layout:BlockLayoutCell>
+                            <layout:content>
+                              <GenericTile class="sapUiTinyMargin tileLayout" header="{i18n>salesOrderStatuses}" press="onPress" customdata:target="sales-order-statuses"/>
+                            </layout:content>
+                          </layout:BlockLayoutCell>
+                        </layout:content>
+                      </layout:BlockLayoutRow>
+                    </layout:content>
+                  </layout:BlockLayout>
+                </uxap:blocks>
+              </uxap:ObjectPageSubSection>
             </uxap:subSections>
           </uxap:ObjectPageSection>
         </uxap:sections>

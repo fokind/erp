@@ -1,0 +1,75 @@
+<mvc:View
+	controllerName="tms.basic.controller.SalesOrderStatuses"
+	xmlns:mvc="sap.ui.core.mvc"
+  xmlns:s="sap.m.semantic"
+  xmlns="sap.uxap"
+	displayBlock="true"
+	xmlns:m="sap.m">
+  <ObjectPageLayout useIconTabBar="true" showHeaderContent="true" showTitleInHeaderContent="true">
+    <headerTitle>
+      <ObjectPageHeader isObjectTitleAlwaysVisible="false" >
+        <actions>
+					<ObjectPageHeaderActionButton icon="sap-icon://account" enabled="false"/>
+        </actions>
+        <breadcrumbs>
+          <m:Breadcrumbs currentLocationText="{i18n>salesOrderStatuses}">
+						<m:Link text="{i18n>home}" href="#"/>
+					</m:Breadcrumbs>
+        </breadcrumbs>
+      </ObjectPageHeader>
+    </headerTitle>
+    <sections>
+      <ObjectPageSection>
+        <subSections>
+          <ObjectPageSubSection>
+            <blocks>
+              <m:Table
+                id="salesOrderStatuses"
+                growing="true"
+                growingThreshold="10"
+                items="{
+                  path: '/SalesOrderStatuses',
+                  parameters: {
+                    $count: true
+                  }
+                }"
+                delete="onDeletePress"
+                mode="Delete"
+                >
+                <m:headerToolbar>
+                  <m:Toolbar>
+                    <m:Title text="{i18n>salesOrderStatuses}"/>
+                    <m:ToolbarSpacer />
+                    <m:Button icon="sap-icon://add" press="onAddActionPress"/>
+                  </m:Toolbar>
+                </m:headerToolbar>
+                <m:columns>
+                  <m:Column>
+                    <m:Text text="{i18n>code}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>name}"/>
+                  </m:Column>
+                  <m:Column>
+                    <m:Text text="{i18n>sortPosition}"/>
+                  </m:Column>
+                </m:columns>
+                <m:items>
+                  <m:ColumnListItem
+                    type="Active"
+                    press="onItemPress">
+                    <m:cells>
+                      <m:Text text="{key}"/>
+                      <m:Text text="{name}"/>
+                      <m:ObjectNumber number="{sortPosition}"/>
+                    </m:cells>
+                  </m:ColumnListItem>
+                </m:items>
+              </m:Table>
+            </blocks>
+          </ObjectPageSubSection>
+        </subSections>
+      </ObjectPageSection>
+    </sections>
+  </ObjectPageLayout>
+</mvc:View>

@@ -109,6 +109,16 @@
 					"target": "employee"
 				},
 				{
+					"pattern": "sales-order-statuses/{id}",
+					"name": "sales-order-status",
+					"target": "sales-order-status"
+				},
+				{
+					"pattern": "sales-order-statuses",
+					"name": "sales-order-statuses",
+					"target": "sales-order-statuses"
+				},
+				{
 					"pattern": "sales-orders/{id}",
 					"name": "sales-order",
 					"target": "sales-order"
@@ -143,6 +153,16 @@
 				"employee": {
 					"viewId": "employee",
 					"viewName": "Employee",
+					"viewLevel" : 3
+				},
+				"sales-order-statuses": {
+					"viewId": "sales-order-statuses",
+					"viewName": "SalesOrderStatuses",
+					"viewLevel" : 2
+				},
+				"sales-order-status": {
+					"viewId": "sales-order-status",
+					"viewName": "SalesOrderStatus",
 					"viewLevel" : 3
 				},
 				"sales-orders": {

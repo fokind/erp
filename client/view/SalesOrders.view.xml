@@ -53,6 +53,10 @@
                   <m:Column>
                     <m:Text text="{i18n>customer}"/>
                   </m:Column>
+                  <m:Column visible="false">
+                    <!--нужен для expand-->
+                    <m:Text text="{i18n>salesPersonId}"/>
+                  </m:Column>
                   <m:Column>
                     <m:Text text="{i18n>salesPerson}"/>
                   </m:Column>
@@ -82,7 +86,8 @@
                         }
                       }"/>
                       <m:Text text="{customerName}"/>
-                      <m:Text text="{salesPerson/firstName}"/>
+                      <m:Text text="{salesPersonId}"/>
+                      <m:Text text="{salesPerson/lastName} {salesPerson/firstName}"/>
                       <m:Text text="{statusName}"/>
                       <m:ObjectNumber number="{total}" unit="р."/>
                     </m:cells>

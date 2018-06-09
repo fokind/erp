@@ -89,7 +89,7 @@ sap.ui.define([
       let oDataListBinding = oModel.bindList('/SalesOrderRows');
       let sSalesOrderId = that.getModel('view').getProperty('/id');
 
-      console.log(1);
+      //console.log(1);
 
       let oContext = oDataListBinding.create({
         "productName": "",
@@ -103,7 +103,7 @@ sap.ui.define([
 
       //метод рефреш необходимо вызывать у родительского абсолютного биндинга
       oContext.created().then(() => {
-        console.log(2);
+        //console.log(2);
         oModel.refresh();
         //открыть диалог
       });      

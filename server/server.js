@@ -2,8 +2,11 @@
 
 var loopback = require('loopback');
 var boot = require('loopback-boot');
+//var cookieParser = require('cookie-parser');
 
 var app = module.exports = loopback();
+
+//app.use(cookieParser);
 
 app.start = function() {
   // start the web server
@@ -18,8 +21,23 @@ app.start = function() {
   });
 };
 
+app.middleware('auth', (req, res, next) => {
+  /*var cookie = req.cookies.cookieName;
+  if (cookie === undefined)
+  {*/
+    //res.cookie('auth', 'dfksdfjhlsdjhflskjhf', {maxAge: 900000, httpOnly: true});
+    //console.log('cookie created successfully');
+  /*} 
+  else
+  {
+    // yes, cookie was already present 
+    console.log('cookie exists', cookie);
+  } */
+  next(); // <-- important!
+});
+
 /*app.use(loopback.token({
-  model: app.models.accessToken
+  model: app.models.accessToken,
 }));*/
 
 // Bootstrap the application, configure models, datasources and middleware.
